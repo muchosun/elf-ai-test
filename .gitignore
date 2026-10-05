@@ -1,0 +1,5 @@
+node_modules/
+dist/
+evidence/
+source-assets/
+.DS_Store

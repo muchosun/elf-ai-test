@@ -1,0 +1,200 @@
+{
+  "categories": [
+    {
+      "name": "White",
+      "image": "assets/fa183ec1ceeaa36d.jpg"
+    },
+    {
+      "name": "Black",
+      "image": "assets/7091cf39da183dad.jpg"
+    },
+    {
+      "name": "Latina",
+      "image": "assets/e10162b82c78bac1.jpg"
+    },
+    {
+      "name": "Asian",
+      "image": "assets/7b2795b11b773863.jpg"
+    },
+    {
+      "name": "Middle Eastern",
+      "image": "assets/5592a17a02cda764.jpg"
+    }
+  ],
+  "characters": [
+    {
+      "images": [
+        "assets/a555c18db8eca4de.jpg",
+        "assets/012de05991035484.jpg",
+        "assets/f263b0a7b77afe33.jpg",
+        "assets/0ee9df92f7ef9f3e.jpg",
+        "assets/0c64a1f1ae8bfae6.jpg",
+        "assets/5964452d33751ac7.jpg"
+      ],
+      "name": "Kanya",
+      "videos": [
+        "assets/58749cb5a14b5046.mp4"
+      ]
+    },
+    {
+      "images": [
+        "assets/c4aaf6add3dba4a8.jpg",
+        "assets/66b1ff6fae529b8d.jpg"
+      ],
+      "name": "Fah",
+      "videos": [
+        "assets/28ec70d251e0ce04.mp4"
+      ]
+    },
+    {
+      "images": [
+        "assets/00f703df3b8dce32.jpg",
+        "assets/0b20fda2405953b9.jpg"
+      ],
+      "name": "Nadia",
+      "videos": [
+        "assets/3ff603bb2bfc9efc.mp4"
+      ]
+    },
+    {
+      "images": [
+        "assets/3b055450c3053311.jpg",
+        "assets/7df67fb218bd296a.jpg"
+      ],
+      "name": "Ping",
+      "videos": [
+        "assets/8aae0ec28a82bc86.mp4"
+      ]
+    },
+    {
+      "images": [
+        "assets/68fc687626936f0b.jpg",
+        "assets/51fb9641f8629f3f.jpg"
+      ],
+      "name": "Jordan",
+      "videos": [
+        "assets/f6128e423ed4d55b.mp4"
+      ]
+    },
+    {
+      "images": [
+        "assets/67f2fd19ddbc1fcd.jpg",
+        "assets/a7fdfa272cae1b6c.jpg"
+      ],
+      "name": "Esperanza",
+      "videos": [
+        "assets/852aa1868e6cc6ce.mp4"
+      ]
+    },
+    {
+      "images": [
+        "assets/4530edaa5becd62d.jpg",
+        "assets/2b92dce0ad4a7344.jpg"
+      ],
+      "name": "Seo-yeon",
+      "videos": [
+        "assets/3b62e1ca648d270e.mp4"
+      ]
+    },
+    {
+      "images": [
+        "assets/e347b245f1efe422.jpg",
+        "assets/415870983384aebe.jpg"
+      ],
+      "name": "Qiang",
+      "videos": [
+        "assets/18b4034890265273.mp4"
+      ]
+    },
+    {
+      "images": [
+        "assets/df0b43d3ae932d81.jpg",
+        "assets/f76de7e455929d19.jpg"
+      ],
+      "name": "Dayo",
+      "videos": [
+        "assets/d5570b8342f28abc.mp4"
+      ]
+    },
+    {
+      "images": [
+        "assets/8321d831225ed50d.jpg",
+        "assets/95ed428b26cf0d2d.jpg"
+      ],
+      "name": "Mint",
+      "videos": [
+        "assets/6988a421a5c52123.mp4"
+      ]
+    },
+    {
+      "images": [
+        "assets/dfc49a02d1005978.jpg",
+        "assets/990e35258db7a0a7.jpg"
+      ],
+      "name": "Grace",
+      "videos": [
+        "assets/db3287d97b12d933.mp4"
+      ]
+    },
+    {
+      "images": [
+        "assets/aef211248c69809a.jpg",
+        "assets/9f0f0857ffe711a8.jpg"
+      ],
+      "name": "Brittany",
+      "videos": [
+        "assets/5fc00eeff1defb5f.mp4"
+      ]
+    },
+    {
+      "images": [
+        "assets/97f03846636eabe7.jpg",
+        "assets/2f476e0c861835da.jpg"
+      ],
+      "name": "Kanya",
+      "videos": [
+        "assets/3e45cf0a65dddd39.mp4"
+      ]
+    },
+    {
+      "images": [
+        "assets/56f12d4ee7574975.jpg",
+        "assets/1209fee6c69f4240.jpg"
+      ],
+      "name": "Midori",
+      "videos": [
+        "assets/df1cb8ff707437df.mp4"
+      ]
+    },
+    {
+      "images": [
+        "assets/9c08dd6b147c2eef.jpg",
+        "assets/0e540211a6deeecc.jpg"
+      ],
+      "name": "Thandiwe",
+      "videos": [
+        "assets/c6a0cdbc6a9301b3.mp4"
+      ]
+    },
+    {
+      "images": [
+        "assets/ceefdba3407c1f38.jpg",
+        "assets/75bd77d32a69e17c.jpg"
+      ],
+      "name": "Aya",
+      "videos": [
+        "assets/94f0597e663c93aa.mp4"
+      ]
+    },
+    {
+      "images": [
+        "assets/24a2300f8c06d052.jpg",
+        "assets/cd6f9b5c92af91d2.jpg"
+      ],
+      "name": "Wairimu",
+      "videos": [
+        "assets/d96da8274cad3d64.mp4"
+      ]
+    }
+  ]
+}
