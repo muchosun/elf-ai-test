@@ -1,0 +1,7 @@
+{
+  "name": "elf-mavs-checkout",
+  "private": true,
+  "type": "module",
+  "engines": { "node": "22.x" },
+  "scripts": { "test": "node --test tests/*.test.js" }
+}
