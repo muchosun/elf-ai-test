@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import {checkoutReturnURL} from '../checkout-return.js';
+const base = 'https://muchosun.github.io/elf-ai-test/index.html';
+const returned = new URL(checkoutReturnURL(base + '?mavs_return=success&merchant_payment_id=test-order&merchant_customer_id=test-user&utm_source=campaign#paywall'));
+assert.equal(returned.hash, '#explore');
+assert.equal(returned.search, '?utm_source=campaign');
+assert.equal(returned.pathname, '/elf-ai-test/index.html');
+assert.equal(checkoutReturnURL(base + '?mavs_return=failure#paywall'), null);
+assert.equal(checkoutReturnURL(base + '#paywall'), null);
+assert.equal(checkoutReturnURL(returned.href), null);
+console.log('PASS: successful checkout returns home, removes payment identifiers, preserves attribution, leaves ordinary and failed visits unchanged');

@@ -1,5 +1,8 @@
 import {requestCheckout} from './checkout-client.js?v=20261006-4';
+import {checkoutReturnURL} from './checkout-return.js?v=20261006-7';
 import {authScreen,updateAuthFields,submitAuth,signedIn,currentAccount,accountLabel,signOut,forgetAccount,completeOnboarding} from './auth.js?v=20261006-3';
+const checkoutReturn = checkoutReturnURL(location.href);
+if (checkoutReturn) history.replaceState(null, '', checkoutReturn);
 if (!location.hash && !new URLSearchParams(location.search).has('entry') && !signedIn()) location.replace('./of-creators.html'+location.search);
 const catalog=await (await fetch('./catalog.json')).json();
 const $=s=>document.querySelector(s), esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
