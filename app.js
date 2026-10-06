@@ -1,4 +1,4 @@
-import {authScreen,updateAuthFields,submitAuth,signedIn,currentAccount,accountLabel,signOut,forgetAccount,completeOnboarding} from './auth.js';
+import {authScreen,updateAuthFields,submitAuth,signedIn,currentAccount,accountLabel,signOut,forgetAccount,completeOnboarding} from './auth.js?v=20261006-2';
 const catalog=await (await fetch('./catalog.json')).json();
 const $=s=>document.querySelector(s), esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const topics=['Music','Comedy','Cosplay','Anime','Travel','DIY','Makeup','Fitness','Sports','Yoga','Tattoo','Photography','Entrepreneur','Education','Finance','Shopping','Tech','Science','Relationships & Social','Dating','Books','Art & Culture'];
