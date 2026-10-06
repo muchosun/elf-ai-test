@@ -6,6 +6,7 @@ try { account=JSON.parse(localStorage.getItem(ACCOUNT_KEY)||'null'); session=JSO
 if(!account||typeof account.email!=='string'||typeof account.id!=='string'||typeof account.verifier!=='string'||typeof account.salt!=='string')account=null;
 export const currentAccount=()=>account;
 export const signedIn=()=>Boolean(account&&session?.accountId===account.id);
+export function forgetAccount(){for(const key of [ACCOUNT_KEY,SESSION_KEY,'elf.preferences','elf.lastRoute','elf.events'])localStorage.removeItem(key);account=null;session=null;}
 export function signOut(){localStorage.removeItem(SESSION_KEY);session=null;}
 export function completeOnboarding(){if(!account)return;account={...account,onboardingComplete:true};localStorage.setItem(ACCOUNT_KEY,JSON.stringify(account));}
 function bytesToHex(bytes){return [...bytes].map(b=>b.toString(16).padStart(2,'0')).join('');}
