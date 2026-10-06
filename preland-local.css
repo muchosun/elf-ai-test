@@ -1,0 +1,19 @@
+body{font-family:"Rethink Sans",Arial,sans-serif}
+.elf-wordmark{font-family:"Rethink Sans",Arial,sans-serif;font-style:italic;font-size:64px;font-weight:900;letter-spacing:-5px;line-height:1;color:white;text-align:center}
+.elf-footer-wordmark{font-size:180px;color:#d83e33;letter-spacing:-14px;display:flex;align-items:center;justify-content:center}
+[data-period]{cursor:pointer;outline-offset:5px}
+[data-period] p{color:white!important}
+[data-period].elf-period-active{background:white!important;border-radius:40px}
+[data-period].elf-period-active p{color:#d83e33!important}
+#pricing .framer-1fawq8o{display:none!important}
+[data-faq-toggle]{cursor:pointer;outline-offset:4px}
+.elf-faq-answer[hidden]{display:none!important}
+.elf-faq-open{height:auto!important}
+.elf-faq-answer:not([hidden]){opacity:1!important;position:relative!important;inset:auto!important;transform:none!important;height:auto!important;max-height:none!important;padding:0 16px 16px!important}
+.elf-faq-open .framer-iysmpn-container{transform:rotate(180deg)!important}
+#preview-info{font-family:"Rethink Sans",Arial,sans-serif;border:0;border-radius:24px;padding:30px;max-width:min(440px,calc(100vw - 40px));color:#212121}
+#preview-info::backdrop{background:#0008}
+#preview-info h2{font-size:28px;margin:0 0 16px}
+#preview-info p{line-height:1.5}
+#preview-info button{font:inherit;background:#212121;border:0;border-radius:40px;color:white;padding:12px 28px;cursor:pointer}
+@media(max-width:699px){.elf-wordmark{font-size:60px}.elf-footer-wordmark{font-size:150px}}

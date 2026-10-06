@@ -1,40 +1,47 @@
-# Elf — проверка HTML-прототипа
+# Elf prelanding and funnel entry QA — 2026-10-06
 
-final result: blocked
+final result: passed
 
-Дата: 2026-10-05. Область результата: адаптированный frontend до тестового paywall. Полная копия всего продукта и всего каталога этим результатом не подтверждается.
+Scope: new of-creators prelanding, source hero/media/layout, local registration entry, return navigation, UTM and proposed price continuity. This pass does not claim complete product cloning. The previously identified Upload face photo creative mismatch remains outside this pass and is still unresolved.
 
-## Источник и визуальная проверка
+## Visual evidence
 
-Источник открыт в авторизованной сессии встроенного браузера. Проверены интересы, Me / AI character, paywall, Explore, мобильные поиск и фильтры, выбор способа использования шаблона, первый экран загрузки фото и подсказки, магазин, карточка Kanya и состояния закрытых разделов. Маршруты перечислены в SOURCE-MAP.md.
+Source: https://foxy.ai/of-creators, live in-app browser tab 8. Full source DOM/styles and desktop/mobile captures in evidence/preland-*; real public media downloaded locally.
+Implementation: http://127.0.0.1:4173/of-creators.html.
 
-Desktop 1440×900 и mobile 390×844. Сравнения источника и прототипа собраны рядом в локальных evidence/compare-*.png; при различном размере растров снимки приведены к одному размеру. Сверены сетки, пропорции медиа, шрифт, отступы, заголовки, меню, карточки, планы и модальные состояния. Реальные фото, видео, SVG и шрифт сохранены локально.
+- Mobile CSS viewport 390×844; source evidence/preland-mobile-top.png and implementation evidence/elf-preland-mobile.png, both 375×812 screenshot pixels (same in-app density/scrollbar normalization). Side-by-side evidence/compare-preland-mobile.png was opened and inspected.
+- Desktop CSS viewport 1440×900; source evidence/preland-desktop-top.png and implementation evidence/elf-preland-desktop.png, both 1425×891 screenshot pixels. Side-by-side evidence/compare-preland-desktop.png was opened and inspected; source renders a centered portrait hero at this size.
+- Whole mobile page: evidence/preland-mobile-full.png (375×9330), evidence/elf-preland-mobile-full.png (375×8949), opened together in evidence/compare-preland-full-mobile.png. Height difference follows shorter own preview copy and one consistent test plan instead of three source plans.
+- Focused readable first-screen comparison is the mobile side-by-side above. Section captures retain readable source and implementation evidence for media, pricing, FAQ and footer.
 
-Исправлены отсутствующие runtime-ассеты production-сборки, некорректные внешние SVG, неверное фото второго ряда, мобильная группировка карточек магазина, лишнее нижнее меню магазина/карточки, полосы прокрутки категорий/миниатюр и затухание фона paywall.
+## Required fidelity surfaces
 
-## Функциональная проверка в браузере
+- Fonts: captured Rethink Sans/Parisienne styles and locally downloaded font files; existing Rethink Sans variable face used by the app. Hero size, weight, wrapping and CTA typography match the captured layout. Own Elf wordmark follows the existing prototype's branding.
+- Spacing: captured Framer layout, section/card dimensions, hero alignment, CTA width, radii, gradients and section rhythm retained. Mobile hero text and CTA align with source. Desktop subtitle is shorter because it is own preview copy; its group remains aligned to the CTA.
+- Colors: original pink/red/white/black tokens and captured decorative/source SVG assets retained. No handcrafted illustrations introduced.
+- Images: source hero video downloaded completely (2,571,637 bytes), browser decodes and plays the local file. Images and secondary videos are local, with no missing images or external media URLs in DOM. One 4K/60fps secondary video was resized to 720px/30fps for its small slot. Different video frames in paired screenshots are expected playback differences, not substituted creatives.
+- Copy: own brand, preview note, example labels, adapted FAQ, company/address removal and test price continuity are intentional. Source claims about reviews, customer counts, performance and paid generation were not transplanted as Elf facts. No source marketing popup, third-party registration, payment, or tracking scripts execute.
 
-- Множественный выбор интересов → выбор AI character → paywall.
-- Monthly / Annual меняют цену CTA; checkout показывает демонстрационное сообщение без оплаты.
-- Промокод раскрывается; демонстрационный ответ. FAQ раскрывается и закрывается.
-- Закрытие paywall возвращает на предыдущий экран.
-- Explore: поиск, пустая выдача, Reset, категории, фильтр Videos, мобильные Search / Filters.
-- Шаблон → AI influencer → магазин → персонаж → фото/видео → paywall.
-- Фильтр внешности, сортировка по имени, Load more, возвраты.
-- Выбор персонажа сохраняется после перезагрузки.
-- Шаблон → свои фотографии → локальный file chooser → превью → paywall. Фото не отправлялось в Foxy или сервер Elf.
-- Меню, Escape, блокирующие сообщения Create / Characters / Gallery.
-- В проверенных экранах нет незагруженных изображений и горизонтального переполнения. Видео в production-сборке достигло readyState=4.
-- node --check app.js и npm run build проходят. Production-сборка открыта отдельно на порту 4174 и пройдены магазин → карточка → paywall.
+## Comparison history and fixes
 
-## Осознанные отличия и остаток
+- Initial DOM pass found leftover Creator/Pro prices after adapting pricing. Removed both source cards completely and verified a single $9 monthly / $6 equivalent annual ($72/year) test plan.
+- Initial FAQ wiring reused IDs in hidden responsive variants. Gave each question/answer a unique pair; rechecked visible answer expansion in desktop/mobile.
+- Initial typography wiring referenced the source font's name rather than its stored local hash. Corrected it before the first rendered comparison.
+- Final hero desktop/mobile paired comparisons showed no actionable P0/P1/P2 mismatch within the adapted preview scope. Full page comparison showed the same section order and source media. Intentional copy/offer changes account for the height and content differences.
 
-Elf имеет собственное название и демонстрационный аккаунт. Чужие отзывы, счетчики клиентов, гарантии владения и дефицита удалены; описания и FAQ адаптированы. Кадр движущегося видео меняется и не обязан совпадать со снимком источника.
+## Interactions and verification
 
-Каталог ограничен 12 шаблонами и 17 персонажами; порядок и категории демонстрационные. Body type и серверная выдача не воспроизведены. Ветка фото после первого экрана упрощена. Настоящие авторизация, генерация и платежи отсутствуют. Это ограничение объема, а не утверждение о полном парсинге Foxy.
+- Guest root redirects to of-creators.html; direct signup remains available.
+- Hero Get Started -> local signup preserves query/UTM. Signup Back returns to prelanding with query preserved.
+- All conversion links point to local signup/login. Auxiliary links use local sections or the preview-information dialog.
+- Monthly/yearly prices switch and persist the selected plan for the app.
+- FAQ opens/closes via pointer and supports Enter/Space; unique aria-controls/expanded states.
+- Sticky CTA appears once the hero leaves view; hero video plays only when in/near view, and a real extracted video poster covers reduced-motion/non-autoplay entry.
+- Full browser smoke on a separate clean test origin (127.0.0.1:4175): root -> preland -> signup -> interests -> character choice -> paywall. Reload retained paywall; returning root retained signed-in state. No real payment or external account was created.
+- npm test passed existing credential/session/storage tests. npm run build passed; static prelanding files and assets included in dist.
+- Browser inspection: no broken images, no horizontal overflow, no external media URLs; no error/warning entries in inspected logs. Public publication is checked separately after deployment.
 
-P3: точное совпадение всех позиций карточек и анимаций; дальнейшая переработка временных креативов. Централизованная аналитика еще не подключена: события сохраняются в localStorage посетителя.
+## Follow-up
 
-## Новый объем: регистрация и преленд
-
-Регистрация реализована и прошла проверку (design-qa-auth.md). Преленд Foxy `/of-creators` не догружается во встроенном браузере; полная выгрузка HTML прерывается. Доступен только текст источника, недостаточный для обещания визуальной копии один в один. Общий запрос остается частично выполненным. Старый passed относился к ранее проверенному frontend без регистрации и преленда.
+- Previously identified Upload face photo source contour is still unresolved; this change preserves that screen.
+- Local analytics only; no aggregate traffic report is connected.

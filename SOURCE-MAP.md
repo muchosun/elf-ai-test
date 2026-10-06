@@ -15,7 +15,7 @@
 
 ## Регистрация и преленд — 6 октября 2026
 
-- `https://foxy.ai/of-creators`: публичный текст прочитан; Get started ведет на `https://app.foxy.ai/sign-up`. Live-страница не догружается во встроенном браузере. Прямая выгрузка обрывается после начала ответа; полная визуальная копия пока заблокирована.
+- `https://foxy.ai/of-creators`: после первоначальных ошибок доступа страница открылась. Сняты первый экран, полная страница, desktop/mobile секции, monthly/yearly, открытый FAQ, DOM/CSS и публичные медиа. Get started ведет на `https://app.foxy.ai/sign-up`; в Elf — на локальный `index.html#signup` с сохранением query/UTM. Изначальный блокер преленда снят.
 - `/sign-up`: Start creating, Google / Facebook / Apple / X, Your email, Already have an account? Log in, Forgot password, правовые ссылки. Desktop: соцкнопки над email; mobile: email над соцкнопками. Непустой email раскрывает Enter password и Continue. Формы на Foxy не отправлялись, новый аккаунт не создавался.
 - `/sign-in`: Welcome back, те же способы входа, ссылка Sign up. Для снятия гостевых экранов текущая сессия Foxy завершена.
 - `/forgot-password`: доступный отрисованный экран оказался пустым; восстановление на Foxy не проверено. В Elf — пояснение об отсутствии email recovery в локальном прототипе.
