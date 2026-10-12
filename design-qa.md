@@ -1,6 +1,6 @@
 # Foxy → Elf landing fidelity QA, 2026-10-12
 
-Status: passed for the inherited prelanding and selected-offer handoff. This is not a claim that the full Foxy application was reproduced.
+Status: visual prelanding QA passed; public offer handoff passed; end-to-end browser checkout verification blocked by network access. This is not a claim that the full Foxy application was reproduced.
 
 Reference: https://foxy.ai/of-creators. Local preview: http://127.0.0.1:4173/of-creators.html?v=20261012-2.
 
@@ -29,4 +29,4 @@ Fonts, original font weights, colors, corner radii, spacing, media crops and car
 - Earlier default CDP captures had incorrect cropping; final evidence uses explicit viewport clips.
 
 ## Functional checks
-Root tests and server tests pass. Server catalog verifies all 14 fixed amount combinations and rejects client amount/card overrides. Production build succeeds. Browser reload + Pro/monthly + FAQ produces only localhost/data asset requests, with no external source tracking and no console errors. Vercel function deployment is Ready and public health returns checkoutEnabled=true. Public frontend and selected-offer gateway verification are recorded after publication.
+Root tests and server tests pass. Server catalog verifies all 14 fixed amount combinations and rejects client amount/card overrides. Production build succeeds. Browser reload + Pro/monthly + FAQ produces only localhost/data asset requests, with no external source tracking and no console errors. Vercel function deployment is Ready and public health returns checkoutEnabled=true. GitHub Pages run 38245974592 succeeded for e72299a. Published pricing and Creator Annual handoff verified in-browser: $26/month, $312/year. Browser checkout timed out. Direct DNS addresses 64.29.17.3 / 216.198.79.3 are unreachable from the current network; resolving the same hostname to Vercel edge 216.198.79.195 with normal TLS validation returns health 200 and checkout 200, sandbox=true, trusted pagator.app origin. No browser/network settings changed. Hosted form navigation also timed out, so its rendered amount and full payment path remain unverified. No card data entered or payment submitted. Public screenshot: evidence/clone-20261012/public-mobile-final.png.
