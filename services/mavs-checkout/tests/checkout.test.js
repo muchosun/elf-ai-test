@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { configured, createCheckout } from '../lib/checkout.js';
 import handler from '../api/checkout.js';
+import {selectedOffer,checkoutCode} from '../lib/offers.js';
 const input = { plan: 'monthly', customerId: '11111111-1111-4111-8111-111111111111', requestId: '22222222-2222-4222-8222-222222222222' };
 const env = { MAVS_SANDBOX_CONFIRMED: 'true', MAVS_API_BASE: 'https://api.example.test', MAVS_API_KEY: 'synthetic-test-key', MAVS_MERCHANT_ID: '33333333-3333-4333-8333-333333333333', MAVS_PROJECT_ID: '44444444-4444-4444-8444-444444444444', ELF_SITE_ORIGIN: 'https://muchosun.github.io', ELF_SUCCESS_URL: 'https://muchosun.github.io/elf-ai-test/index.html?mavs_return=success#paywall', ELF_FAILURE_URL: 'https://muchosun.github.io/elf-ai-test/index.html?mavs_return=failure#paywall', MAVS_CHECKOUT_ORIGINS: 'https://pay.example.test' };
 const ok = () => Response.json({ url: 'https://pay.example.test/checkout?token=synthetic' }, { status: 201 });
@@ -17,7 +18,12 @@ test('server fixes amount/currency and rejects card data, price overrides, inval
   for (const bad of [{ ...input, card: { pan: '4111111111111111' } }, { ...input, amount: 1 }, { ...input, plan: 'toString' }, { ...input, customerId: 'bad' }]) {
     await assert.rejects(createCheckout(bad, env, () => assert.fail('must not call provider')), e => e.status === 400);
   }
-  for (const [plan, amount] of [['monthly', 9], ['annual', 72]]) {
+  for (const [plan, amount] of [
+    ['monthly',9],['annual',72],['creator_350_monthly',39],['creator_350_annual',312],
+    ['pro_750_monthly',79],['pro_750_annual',636],['pro_1500_monthly',149],['pro_1500_annual',1188],
+    ['pro_2500_monthly',249],['pro_2500_annual',2004],['pro_5000_monthly',499],['pro_5000_annual',3996],
+    ['pro_10000_monthly',999],['pro_10000_annual',8028],
+  ]) {
     const result = await createCheckout({ ...input, plan }, env, async (url, options) => {
       assert.equal(url.href, 'https://api.example.test/v1/checkout');
       assert.equal(options.redirect, 'error');
@@ -34,6 +40,12 @@ test('server fixes amount/currency and rejects card data, price overrides, inval
     assert.equal(result.sandbox, true);
     assert.equal(JSON.stringify(result).includes(env.MAVS_API_KEY), false);
   }
+});
+test('switching from a high Pro level to Creator preserves Creator, not Starter or Pro pricing',()=>{
+  const offer=selectedOffer('creator',4);
+  assert.equal(offer.credits,350);
+  assert.equal(checkoutCode(offer,'annual'),'creator_350_annual');
+  assert.equal(checkoutCode(selectedOffer('pro',4),'monthly'),'pro_10000_monthly');
 });
 test('rejects untrusted checkout URL and sanitizes provider errors', async () => {
   for (const url of ['http://pay.example.test', 'https://evil.example.test', 'https://user:password@pay.example.test']) {

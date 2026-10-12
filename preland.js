@@ -1,3 +1,5 @@
+import './preland-motion.js?v=20261012-2';
+import {selectedOffer} from './services/mavs-checkout/lib/offers.js?v=20261012-2';
 const query = new URLSearchParams(location.search);
 const record = (name, properties = {}) => {
   try {
@@ -18,17 +20,31 @@ function setPeriod(next) {
   pricing?.querySelectorAll('[data-preview-billing]').forEach(e => e.textContent = period === 'yearly' ? '$72 billed yearly · test offer' : '$9 billed monthly · test offer');
 }
 setPeriod(period);
-document.querySelectorAll('[data-cta]').forEach(link => {
-  link.href = './index.html' + location.search + '#' + link.dataset.cta;
-  link.addEventListener('click', () => {
-    record('preland_cta', {destination: link.dataset.cta, period});
-    try {
-      const preferences = JSON.parse(localStorage.getItem('elf.preferences') || '{}');
-      preferences.plan = period === 'yearly' ? 'annual' : 'monthly';
-      localStorage.setItem('elf.preferences', JSON.stringify(preferences));
-    } catch {}
-  });
+let choice={tier:'starter',level:0};
+addEventListener('elf:offer', event=>{
+  const offer=selectedOffer(event.detail?.tier,event.detail?.level);
+  period=event.detail?.period==='yearly'?'yearly':'monthly';
+  choice={tier:offer.tier,level:offer.level};
+  record('preland_offer',{...choice,period,credits:offer.credits});
 });
+document.querySelectorAll('[data-cta]').forEach(link=>link.href='./index.html'+location.search+'#'+link.dataset.cta);
+// Capture before the original Framer router: route to our registration, with
+// the exact selected offer and attribution, never to Foxy's account service.
+document.addEventListener('click',event=>{
+  const link=event.target.closest('a[href]');
+  if(!link)return;
+  const url=new URL(link.href,location.href);
+  if(url.origin!==location.origin||!url.pathname.endsWith('/index.html')||!['#signup','#login'].includes(url.hash))return;
+  event.preventDefault();event.stopImmediatePropagation();
+  const destination=url.hash.slice(1);
+  record('preland_cta',{destination,period,...choice});
+  try{
+    const preferences=JSON.parse(localStorage.getItem('elf.preferences')||'{}');
+    Object.assign(preferences,{plan:period==='yearly'?'annual':'monthly',tier:choice.tier,creditLevel:choice.level});
+    localStorage.setItem('elf.preferences',JSON.stringify(preferences));
+  }catch{}
+  location.assign('./index.html'+location.search+url.hash);
+},true);
 function toggleFAQ(button) {
   const answer = document.getElementById(button.getAttribute('aria-controls'));
   const open = button.getAttribute('aria-expanded') !== 'true';
@@ -42,7 +58,7 @@ document.addEventListener('click', event => {
   if (periodButton) { setPeriod(periodButton.dataset.period); record('preland_period', {period}); }
   const faqButton = event.target.closest('[data-faq-toggle]');
   if (faqButton) toggleFAQ(faqButton);
-  if (event.target.closest('[data-preview-info]')) {
+  if (event.target.closest('[data-preview-info]:not([data-cta])')) {
     event.preventDefault();
     document.querySelector('#preview-info').showModal();
   }
@@ -53,16 +69,4 @@ document.addEventListener('keydown', event => {
   const control = event.target.closest('[data-period],[data-faq-toggle]');
   if (control) {event.preventDefault();control.click();}
 });
-// Autoplay only media on screen; keep the lower-page videos from downloading on entry.
-const observer = new IntersectionObserver(entries => entries.forEach(({target, isIntersecting}) => {
-  target.muted = true;
-  if (isIntersecting && !matchMedia('(prefers-reduced-motion: reduce)').matches) target.play().catch(() => {});
-  else target.pause();
-}), {rootMargin: '100px'});
-document.querySelectorAll('[data-local-video]').forEach(video => observer.observe(video));
-document.querySelector('#sticky-cta').style.visibility = 'hidden';
-const heroObserver = new IntersectionObserver(([entry]) => {
-  document.querySelector('#sticky-cta').style.visibility = entry.isIntersecting ? 'hidden' : 'visible';
-}, {threshold: 0.1});
-heroObserver.observe(document.querySelector('#hero'));
 record('preland_view');

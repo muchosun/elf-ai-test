@@ -1,5 +1,5 @@
+import {checkoutPlans as plans} from './offers.js';
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-const plans = Object.freeze({ monthly: { amount: 9, label: 'Monthly' }, annual: { amount: 72, label: 'Annual' } });
 export class CheckoutError extends Error {
   constructor(status, code) { super(code); this.status = status; this.code = code; }
 }

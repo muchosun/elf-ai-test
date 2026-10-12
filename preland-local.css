@@ -5,7 +5,6 @@ body{font-family:"Rethink Sans",Arial,sans-serif}
 [data-period] p{color:white!important}
 [data-period].elf-period-active{background:white!important;border-radius:40px}
 [data-period].elf-period-active p{color:#d83e33!important}
-#pricing .framer-1fawq8o{display:none!important}
 [data-faq-toggle]{cursor:pointer;outline-offset:4px}
 .elf-faq-answer[hidden]{display:none!important}
 .elf-faq-open{height:auto!important}
