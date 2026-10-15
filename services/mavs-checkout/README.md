@@ -8,7 +8,7 @@ https://addop.slack.com/archives/D0BHYMLQ5CN/p1784889109509729
 
 - `GET /api/health` — доступность функции и `checkoutEnabled`.
 - `POST /api/checkout` — серверный вызов MAVS `/v1/checkout`, ответ с URL их hosted формы.
-- `OPTIONS /api/checkout` — CORS для `https://muchosun.github.io`.
+- `OPTIONS /api/checkout` — CORS для `https://elf.pink`.
 - Принимаются только `plan`, `customerId` и `requestId` (UUID). Реквизиты карт, email,
   пароли, клиентские суммы и URL возврата не принимаются.
 - Суммы фиксируются на сервере: monthly = 9 USD, annual = 72 USD.
