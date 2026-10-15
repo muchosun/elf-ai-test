@@ -1,3 +1,4 @@
+import {mediaURL as local} from './media.js';
 import {socialSignIn} from './social-auth-client.js';
 import {requestCheckout} from './checkout-client.js?v=20261006-4';
 import {selectedOffer,checkoutCode} from './services/mavs-checkout/lib/offers.js?v=20261012-2';
@@ -13,7 +14,6 @@ const topics=['Music','Comedy','Cosplay','Anime','Travel','DIY','Makeup','Fitnes
 const cats=['All','Lifestyle','Viral','Signatures','Active','Artistic','Luxury','Travel','Cosplay','Seasonal','Men'];
 const icons={compass:'2d101957019bc79a',sparkles:'9f2f8e4e1e74fffe',user:'6fdc982e02858b07',gallery:'ac69869d76fef51e',back:'7e89222a1b814a26',help:'b54df818021eade0',down:'bacc62f06fd0b0ee'};
 const icon=(name,small=false)=>`<img class="icon${small?' small':''}" src="./assets/${icons[name]?icons[name]+'.svg':'icons/'+name+'.svg'}" alt="" aria-hidden="true">`;
-const local=path=>'./'+path;
 const templateData=[
  ['1c0971e6819ed8f8.mp4','0b6b194dc03e2925.jpg','Car selfie',['Lifestyle','Viral'],9/16],
  [null,'72fe75eb7f50a670.jpg','Pumpkin market',['Lifestyle','Seasonal'],.8],

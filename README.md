@@ -111,3 +111,7 @@ Domain is attached to Vercel, but public DNS still points to GitHub Pages. Repla
 | CNAME | www | 085fc968f1bb9bc2.vercel-dns-017.com. |
 
 Replace the previous `www` CNAME to muchosun.github.io; preserve unrelated mail/TXT records. Recheck DNS and HTTPS before disabling GitHub Pages. GitHub automatic deployment is not connected: Vercel's Git-link API returned repository-not-found despite the repository being reachable through GitHub CLI. Existing Vercel CLI authorization is sufficient for manual deployments; Git integration authorization is a separate pending step.
+
+## Media hosting — 2026-10-15
+
+Images and videos are served directly from `https://muchosun.github.io/elf-ai-test/assets/`. GitHub Pages has no custom domain, so media requests do not redirect back to elf.pink. The Pages source remains `codex/elf-marketing-test`; retain its assets when updating that branch. `elf.pink` continues to serve the interface and API from Vercel. The Vercel build and upload omit raster media/video files; UI fonts, icons and JavaScript stay on Vercel. Source media, dimensions and motion behavior are unchanged. The hero asset is `assets/preland/27f7409ecc6b255a.mp4`, 2,571,637 bytes, served with HTTP range support. This hosting change alone is not a verified performance improvement; timings depend on the visitor network and CDN cache.
