@@ -97,3 +97,17 @@ Public launch also needs valid privacy/terms/support pages and any provider veri
 Verification: `npm test` includes real encrypted-session/CSRF/redirect-isolation tests with synthetic credentials; `npm test --prefix services/mavs-checkout` checks sandbox guardrails and fixed prices. Provider consent, real callbacks, Apple form-post compatibility and cross-browser session behavior remain unverified until provider applications are configured.
 
 Sources: [Auth.js Core](https://authjs.dev/reference/core), [Google](https://developers.google.com/identity/protocols/oauth2/web-server), [Facebook provider](https://authjs.dev/getting-started/providers/facebook), [Apple setup](https://developer.apple.com/help/account/capabilities/configure-sign-in-with-apple-for-the-web), [X provider](https://authjs.dev/getting-started/providers/twitter).
+
+### Migration verification and remaining external steps
+
+Verified public deployment: `dpl_CZALEzJf9iyo7hLnorr8koucCdJC` (2026-10-15), accessible at `https://elf-mavs-checkout.vercel.app`. Preland and signup render in browser; signup inspected at desktop and 390×844. Google button correctly reports unconfigured social login. Health returns checkoutEnabled=true; auth status lists four disabled providers; session is null; unconfigured sign-in returns 503. POST checkout with synthetic IDs and the Vercel alias origin returns a Pagator sandbox URL. No card entry or transaction performed. Full browser registration-to-checkout and real OAuth remain unverified in this deployment. Original CSS, preland files and assets are unchanged from the GitHub Pages branch.
+
+Domain is attached to Vercel, but public DNS still points to GitHub Pages. Replace the four GitHub A records on `@` with these records requested by Vercel:
+
+| Type | Name | Value |
+| --- | --- | --- |
+| A | @ | 216.198.79.1 |
+| A | @ | 64.29.17.1 |
+| CNAME | www | 085fc968f1bb9bc2.vercel-dns-017.com. |
+
+Replace the previous `www` CNAME to muchosun.github.io; preserve unrelated mail/TXT records. Recheck DNS and HTTPS before disabling GitHub Pages. GitHub automatic deployment is not connected: Vercel's Git-link API returned repository-not-found despite the repository being reachable through GitHub CLI. Existing Vercel CLI authorization is sufficient for manual deployments; Git integration authorization is a separate pending step.
