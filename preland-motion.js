@@ -21,6 +21,19 @@ if(pricing){
 // Inherit the original player's viewport loading/autoplay behavior as well.
 initVideo();
 for (const video of document.querySelectorAll('[data-local-video]')) {
+  // The first screen must start from HTML parsing, before the React player loads.
+  // Keep its existing video node so hydration does not restart the media request.
+  if (video.hasAttribute('data-native-hero')) {
+    video.autoplay = !reduced.matches;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting || reduced.matches) video.pause();
+      else video.play().catch(() => {});
+    });
+    observer.observe(video);
+    cleanup.push(() => observer.disconnect());
+    if (reduced.matches) video.pause();
+    continue;
+  }
   const srcUrl = video.getAttribute('src'), poster = video.getAttribute('poster');
   const root = createRoot(video.parentElement);
   root.render(createElement(OriginalVideo, {

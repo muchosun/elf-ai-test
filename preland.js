@@ -1,4 +1,4 @@
-import './preland-motion.js?v=20261012-2';
+import './preland-motion.js?v=20261015-hero';
 import {selectedOffer} from './services/mavs-checkout/lib/offers.js?v=20261012-2';
 const query = new URLSearchParams(location.search);
 const record = (name, properties = {}) => {
