@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {requestCheckout} from '../checkout-client.js';
 const url=await requestCheckout('annual','customer-uuid','request-uuid',async(endpoint,options)=>{
- assert.equal(endpoint,'https://elf-mavs-checkout.vercel.app/api/checkout');
+ assert.equal(endpoint,'/api/checkout');
  assert.deepEqual(JSON.parse(options.body),{plan:'annual',customerId:'customer-uuid',requestId:'request-uuid'});
  assert.equal(options.credentials,'omit');
  return Response.json({url:'https://pagator.app/?token=synthetic',sandbox:true});

@@ -72,3 +72,28 @@ npm run preview -- --port 4174
 Структура, CSS, шрифты, медиа и параметры движения взяты из текущего `/of-creators`. Верхняя полоса, FAQ, видеоплеер и тарифный блок (включая Pro slider) используют локальную копию исходных компонентов Framer/Motion. Происхождение и изменения: `assets/vendor/foxy-motion/SOURCE.md`.
 
 Тариф, период и уровень Pro сохраняются при переходе на нашу регистрацию. Общий каталог `services/mavs-checkout/lib/offers.js` используется фронтендом и сервером: Starter $9/$72; Creator $39/$312; пять уровней Pro. Годовая сумма равна показанной месячной цене при годовом биллинге ×12. Всего 14 допустимых сочетаний. Sandbox, отсутствие реальной подписки и проверки URL сохранены. Сбор общей аналитики и webhook в эту доработку не входят.
+
+## Vercel migration — 2026-10-15
+
+Branch `codex/vercel-migration` contains the same frontend and the server endpoints in one deployment. Root `vercel.json` builds `dist`; root `api/checkout.js` and `api/health.js` reuse the existing sandbox implementation. Browser checkout calls `/api/checkout`. No provider key is copied to the frontend. `.vercelignore` excludes local reports/evidence from CLI deployments. GitHub Pages stays on its previous branch until DNS is switched.
+
+The existing Vercel project is `elf-mavs-checkout`; production alias `https://elf-mavs-checkout.vercel.app`. `elf.pink` has been added to the project; DNS must be switched at the external DNS provider after verification. Git integration must be authorized for `muchosun/elf-ai-test`, with production branch `codex/vercel-migration`.
+
+## Prepared social authentication
+
+Auth.js Core implements `/api/auth/*` with encrypted HttpOnly secure session cookies, CSRF and provider state/nonce/PKCE checks. `GET /api/auth/status` reports only public provider availability. No provider is enabled until `AUTH_SECRET`, provider ID and provider secret exist in Vercel. With no keys, session is null and sign-in returns `503 auth_not_configured`; no fake successful login. Existing email/password registration remains device-only. No database, centralized user registry or cross-provider email linking is introduced. Social identity is deterministic per provider/subject; progress stays on this device. Account deletion here clears local data and signs out, not the external provider account.
+
+Callback URLs to register:
+
+| Provider | Callback URL | Required private configuration |
+| --- | --- | --- |
+| Google | `https://elf.pink/api/auth/callback/google` | Web OAuth Client ID/Secret; authorized JavaScript origin `https://elf.pink` |
+| Facebook | `https://elf.pink/api/auth/callback/facebook` | Meta App ID/Secret; Facebook Login for Web; app domain `elf.pink`; public access settings |
+| Apple | `https://elf.pink/api/auth/callback/apple` | Services ID associated with primary App ID, Team ID, Key ID and `.p8` key to issue a time-limited client-secret JWT |
+| X | `https://elf.pink/api/auth/callback/twitter` | OAuth 2.0 Web App Client ID/Secret, callback and website URL; uses PKCE |
+
+Public launch also needs valid privacy/terms/support pages and any provider verification required by the chosen account. Enter secrets directly in Vercel, never in chat or Git. Apple client secret expires and needs renewal. OAuth preview deployments are intentionally not authorized as production callback origins. `AUTH_SECRET` must be a stable random secret; rotation invalidates existing sessions.
+
+Verification: `npm test` includes real encrypted-session/CSRF/redirect-isolation tests with synthetic credentials; `npm test --prefix services/mavs-checkout` checks sandbox guardrails and fixed prices. Provider consent, real callbacks, Apple form-post compatibility and cross-browser session behavior remain unverified until provider applications are configured.
+
+Sources: [Auth.js Core](https://authjs.dev/reference/core), [Google](https://developers.google.com/identity/protocols/oauth2/web-server), [Facebook provider](https://authjs.dev/getting-started/providers/facebook), [Apple setup](https://developer.apple.com/help/account/capabilities/configure-sign-in-with-apple-for-the-web), [X provider](https://authjs.dev/getting-started/providers/twitter).

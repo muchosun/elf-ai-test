@@ -2,8 +2,9 @@ import { CheckoutError, createCheckout } from '../lib/checkout.js';
 export default async function handler(req, res) {
   res.setHeader('Cache-Control', 'no-store');
   res.setHeader('Vary', 'Origin');
-  const origin = process.env.ELF_SITE_ORIGIN || 'https://muchosun.github.io';
-  if (req.headers.origin !== origin) return res.status(403).json({ error: 'origin_not_allowed' });
+  const origins = [process.env.ELF_SITE_ORIGIN || 'https://muchosun.github.io', ...(process.env.ELF_SITE_ALIASES || '').split(',').map(v => v.trim()).filter(Boolean)];
+  const origin = req.headers.origin;
+  if (!origins.includes(origin)) return res.status(403).json({ error: 'origin_not_allowed' });
   res.setHeader('Access-Control-Allow-Origin', origin);
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');

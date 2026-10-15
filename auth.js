@@ -1,14 +1,16 @@
+import {loadSocialSession, socialSignOut} from './social-auth-client.js';
 // Device-only preview accounts. This is not server authentication.
 const ACCOUNT_KEY='elf.account', SESSION_KEY='elf.session';
 const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-let account=null, session=null;
+let account=null, session=null, socialAccount=null;
 try { account=JSON.parse(localStorage.getItem(ACCOUNT_KEY)||'null'); session=JSON.parse(localStorage.getItem(SESSION_KEY)||'null'); } catch {}
 if(!account||typeof account.email!=='string'||typeof account.id!=='string'||typeof account.verifier!=='string'||typeof account.salt!=='string')account=null;
-export const currentAccount=()=>account;
-export const signedIn=()=>Boolean(account&&session?.accountId===account.id);
-export function forgetAccount(){for(const key of [ACCOUNT_KEY,SESSION_KEY,'elf.preferences','elf.lastRoute','elf.events'])localStorage.removeItem(key);account=null;session=null;}
-export function signOut(){localStorage.removeItem(SESSION_KEY);session=null;}
-export function completeOnboarding(){if(!account)return;account={...account,onboardingComplete:true};localStorage.setItem(ACCOUNT_KEY,JSON.stringify(account));}
+export const currentAccount=()=>socialAccount||account;
+export async function initializeSocialAuth(){const user=await loadSocialSession();if(user){let complete=false;try{complete=localStorage.getItem(`elf.onboarding.${user.id}`)==='true'}catch{}socialAccount={...user,onboardingComplete:complete};}return socialAccount;}
+export const signedIn=()=>Boolean(socialAccount||(account&&session?.accountId===account.id));
+export async function forgetAccount(){if(socialAccount){await socialSignOut();localStorage.removeItem(`elf.onboarding.${socialAccount.id}`);socialAccount=null;}for(const key of [ACCOUNT_KEY,SESSION_KEY,'elf.preferences','elf.lastRoute','elf.events'])localStorage.removeItem(key);account=null;session=null;}
+export async function signOut(){if(socialAccount){await socialSignOut();socialAccount=null;}localStorage.removeItem(SESSION_KEY);session=null;}
+export function completeOnboarding(){if(socialAccount){localStorage.setItem(`elf.onboarding.${socialAccount.id}`,'true');socialAccount.onboardingComplete=true;return;}if(!account)return;account={...account,onboardingComplete:true};localStorage.setItem(ACCOUNT_KEY,JSON.stringify(account));}
 function bytesToHex(bytes){return [...bytes].map(b=>b.toString(16).padStart(2,'0')).join('');}
 async function derive(password,salt){const key=await crypto.subtle.importKey('raw',new TextEncoder().encode(password),'PBKDF2',false,['deriveBits']);const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt:Uint8Array.from(salt.match(/.{2}/g),s=>parseInt(s,16)),iterations:120000,hash:'SHA-256'},key,256);return bytesToHex(new Uint8Array(bits));}
 export function authScreen(mode='signup'){
@@ -33,4 +35,4 @@ export async function submitAuth(form){const email=form.querySelector('[name=ema
  }catch{error.textContent='Could not save your local account. Allow browser storage and try again.';error.hidden=false;return null;}
  finally{button.textContent='Continue';updateAuthFields();}
 }
-export function accountLabel(){return account?escape(account.email):'';}
+export function accountLabel(){const user=currentAccount();return user?escape(user.email||user.name||'Elf member'):'';}

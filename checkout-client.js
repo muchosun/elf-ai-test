@@ -1,4 +1,4 @@
-const endpoint = 'https://elf-mavs-checkout.vercel.app/api/checkout';
+const endpoint = '/api/checkout';
 export async function requestCheckout(plan, customerId, requestId, fetcher = fetch) {
   const response = await fetcher(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ plan, customerId, requestId }), signal: AbortSignal.timeout(25000), credentials: 'omit', cache: 'no-store' });
   const result = await response.json();
