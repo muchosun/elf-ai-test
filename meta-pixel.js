@@ -33,14 +33,15 @@
     },
     checkoutReturn: href => {
       const url = new URL(href);
-      if (url.searchParams.get('mavs_return') !== 'success') return;
+      const outcome = url.searchParams.get('mavs_return');
+      if (!['success', 'failure'].includes(outcome)) return;
       try {
         const pending = JSON.parse(w.sessionStorage.getItem(pendingKey) || 'null');
         if (!pending || pending.paymentId !== url.searchParams.get('merchant_payment_id')) return;
         w.sessionStorage.removeItem(pendingKey);
       } catch { return; }
       // A callback URL is not proof of payment. Never emit Purchase here.
-      send('trackSingleCustom', 'SandboxCheckoutReturn', {sandbox: true, payment_verified: false});
+      send('trackSingleCustom', outcome === 'success' ? 'SandboxCheckoutReturn' : 'CheckoutFailedReturn', {sandbox: true, payment_verified: false, checkout_outcome: outcome});
     }
   });
 })(window, document);

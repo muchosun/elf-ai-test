@@ -5,7 +5,10 @@ const returned = new URL(checkoutReturnURL(base + '?mavs_return=success&merchant
 assert.equal(returned.hash, '#explore');
 assert.equal(returned.search, '?utm_source=campaign');
 assert.equal(returned.pathname, '/elf-ai-test/index.html');
-assert.equal(checkoutReturnURL(base + '?mavs_return=failure#paywall'), null);
+const failed = new URL(checkoutReturnURL(base + '?mavs_return=failure&merchant_payment_id=failed-order&utm_source=campaign#paywall'));
+assert.equal(failed.hash, '#paywall');
+assert.equal(failed.search, '?utm_source=campaign');
+assert.equal(checkoutReturnURL(base + '?mavs_return=unknown#paywall'), null);
 assert.equal(checkoutReturnURL(base + '#paywall'), null);
 assert.equal(checkoutReturnURL(returned.href), null);
-console.log('PASS: successful checkout returns home, removes payment identifiers, preserves attribution, leaves ordinary and failed visits unchanged');
+console.log('PASS: successful checkout returns home, removes payment identifiers, preserves attribution, failure returns to plans, removes identifiers and ignores unknown outcomes');

@@ -8,6 +8,7 @@ import {selectedOffer,checkoutCode} from './services/mavs-checkout/lib/offers.js
 import {checkoutReturnURL} from './checkout-return.js?v=20261006-7';
 import {authScreen,updateAuthFields,submitAuth,signedIn,currentAccount,accountLabel,signOut,forgetAccount,completeOnboarding,initializeSocialAuth} from './auth.js?v=20261006-3';
 const checkoutReturnHref = location.href;
+const checkoutOutcome = new URL(checkoutReturnHref).searchParams.get('mavs_return');
 const checkoutReturn = checkoutReturnURL(checkoutReturnHref);
 if (checkoutReturn) history.replaceState(null, '', checkoutReturn);
 window.ElfPixel?.init();
@@ -82,4 +83,5 @@ window.addEventListener('hashchange',()=>{let next=location.hash.slice(1)||'sign
 if(signedIn()&&['signup','login'].includes(route))route=currentAccount().onboardingComplete?'explore':'welcome';
 render();track('screen_view',{screen:route});
 if(new URL(location.href).searchParams.has('auth_error'))toast('Could not sign in. Please try again or continue with email.');
-if(checkoutReturn)modal(`<button class="close" data-action="close" aria-label="Close">${icon('x')}</button><h2>Thanks for your interest!</h2><p>Elf is coming soon.</p><button class="primary" data-action="close">Explore Elf</button>`,'filter-modal return-notice');
+if(checkoutReturn && checkoutOutcome==='failure')modal(`<button class="close" data-action="close" aria-label="Close">${icon('x')}</button><h2>Payment not completed</h2><p>The checkout returned an unsuccessful result. You can try again or choose another plan.</p><button class="primary" data-action="close">Back to plans</button>`,'filter-modal return-notice');
+if(checkoutReturn && checkoutOutcome==='success')modal(`<button class="close" data-action="close" aria-label="Close">${icon('x')}</button><h2>Thanks for your interest!</h2><p>Elf is coming soon.</p><button class="primary" data-action="close">Explore Elf</button>`,'filter-modal return-notice');
