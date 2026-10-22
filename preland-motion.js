@@ -18,7 +18,8 @@ if(pricing){
   root.render(createElement(OriginalPricing,{variant:'Yearly',width:'100%',style:{width:'100%'},w47Apfxko:{current:pricing}}));
   cleanup.push(()=>root.unmount());
 }
-// Inherit the original player's viewport loading/autoplay behavior as well.
+// Keep offscreen HTML video preload=none before mounting the source player.
+// Its own 10% near-viewport observer requests metadata; playback starts in view.
 initVideo();
 for (const video of document.querySelectorAll('[data-local-video]')) {
   // The first screen must start from HTML parsing, before the React player loads.
@@ -74,6 +75,7 @@ for (const [selector, from, to] of [
 
 const footer = document.querySelector('#footer');
 const footerContent = document.querySelector('.framer-1pvrbrt-container');
+if (footerContent && reduced.matches) footerContent.style.transform = 'none';
 if (footer && footerContent && !reduced.matches) {
   cleanup.push(scroll((_, {y}) => {
     let top = 0;

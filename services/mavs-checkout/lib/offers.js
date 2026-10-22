@@ -17,5 +17,11 @@ export const checkoutPlans=Object.freeze(Object.fromEntries(offers.flatMap(offer
   checkoutCode(offer,period), Object.freeze({
     amount:period==='annual'?offer.yearly*12:offer.monthly,
     label:`${offer.label} ${period==='annual'?'Annual':'Monthly'}${offer.tier==='pro'?` ${offer.credits} credits`:''}`,
+    displayName:period==='annual'
+      ?`Elf ${offer.label} $${offer.yearly}/mo · ${Math.round((1-offer.yearly/offer.monthly)*100)}% off · Sandbox`
+      :`Elf ${offer.label} $${offer.monthly}/mo · Sandbox`,
+    description:period==='annual'
+      ?`$${offer.yearly*12} billed yearly ($${offer.yearly}/month). Test checkout. No live subscription or recurring charge.`
+      :`$${offer.monthly} billed monthly. Test checkout. No live subscription or recurring charge.`,
   }),
 ]))));

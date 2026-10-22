@@ -41,6 +41,17 @@ test('server fixes amount/currency and rejects card data, price overrides, inval
     assert.equal(JSON.stringify(result).includes(env.MAVS_API_KEY), false);
   }
 });
+test('annual headline shows monthly equivalent and discount while invoice keeps yearly amount',async()=>{
+ await createCheckout({...input,plan:'annual'},env,async(_url,options)=>{
+  const {payment_data:p}=JSON.parse(options.body);
+  assert.equal(p.amount,72);
+  assert.match(p.name,/\$6\/mo/);
+  assert.match(p.name,/33% off/);
+  assert.match(p.name,/Sandbox/);
+  assert.match(p.description,/\$72 billed yearly/);
+  return ok();
+ });
+});
 test('switching from a high Pro level to Creator preserves Creator, not Starter or Pro pricing',()=>{
   const offer=selectedOffer('creator',4);
   assert.equal(offer.credits,350);

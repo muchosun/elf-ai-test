@@ -30,7 +30,7 @@ export async function createCheckout(input, env, fetcher = fetch) {
   const payload = {
     merchant_id: env.MAVS_MERCHANT_ID,
     project_id: env.MAVS_PROJECT_ID,
-    payment_data: { merchant_payment_id: paymentId, methods: ['card'], type: 'sale', amount: plan.amount, currency_code: 'usd', name: `Elf ${plan.label} sandbox test`, description: 'Test checkout. No live subscription or recurring charge.' },
+    payment_data: { merchant_payment_id: paymentId, methods: ['card'], type: 'sale', amount: plan.amount, currency_code: 'usd', name: plan.displayName, description: plan.description },
     customer: { merchant_customer_id: input.customerId },
     callback: { success_url: c.success.href, failure_url: c.failure.href },
     upsales: []

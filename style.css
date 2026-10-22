@@ -16,3 +16,47 @@ html{overflow-y:scroll}.grid{display:block}.media-row{display:flex;gap:4px;margi
 
 
 .modal.return-notice{width:min(440px,calc(100vw - 32px));max-width:calc(100vw - 32px)}
+
+/* Match the captured Foxy dark auth state; keep tokens scoped to auth. */
+.auth-social button[data-provider="Google"]{background:#fafafa}
+ .auth-page{color:#fafafa;background:#0d0d0d;color-scheme:dark}
+.auth-background{background:#0d0d0d}
+.auth-background:before{background:#181818;mask:url('./assets/auth-spiral.svg') center/100% 100% no-repeat}
+.auth-card{background:#212121}
+.auth-title>.logo{color:#fafafa}
+.auth-social button{background:rgb(250 250 250 / .2);color:#fafafa}
+.auth-social button[data-provider="Google"]{background:#fafafa;color:#212121}
+.auth-social button:not([data-provider="Google"]) img{filter:brightness(0) invert(1)}
+.auth-form input{color:#fafafa;border-color:#454545}
+.auth-form input:focus{border-color:#fafafa}
+.auth-form input::placeholder{color:#929292}
+.auth-submit:disabled{background:#454545;color:#929292}
+
+/* Mobile fixes from Andrey's iPhone captures: constrain grid/flex children. */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+.overlay{grid-template-columns:minmax(0,1fr);justify-items:center}
+.modal{min-width:0;max-width:100%;overflow-wrap:break-word}
+.filter-modal{width:min(440px,100%)}
+.onboarding{width:100%;min-width:0}
+.ob-card{width:100%;max-width:512px;min-width:0}
+.ob-card>*{min-width:0;max-width:100%}
+.ob-card h1{overflow-wrap:break-word}
+.ob-card .chip{max-width:100%;white-space:normal}
+
+/* Responsive interaction fixes, verified at 320–1440 CSS px. */
+.menu-actions>.row{flex-wrap:wrap}
+.categories button{flex:0 0 auto;min-width:24px;min-height:32px}
+.auth-forgot{min-height:32px}
+.auth-legal button,.legal button{min-height:24px}
+.auth-header button{min-width:24px;min-height:24px;align-items:center;justify-content:center}
+html:has(#overlay .overlay){overflow:hidden}
+.overlay{--overlay-inset:24px}
+.modal:not(.template-modal){max-height:calc(100dvh - 2 * var(--overlay-inset))}
+.modal select,.modal input{min-width:0;max-width:100%}
+@media(max-width:767px){
+  .overlay{--overlay-inset:16px}
+  .auth-form input,.toolbar select,.shop-toolbar select,.modal input,.modal select{font-size:16px}
+  .auth-header button,.upload-top button,.onboard-top>button,.modal>.close{min-width:44px;min-height:44px}
+  .auth-header button,.upload-top button,.onboard-top>button{display:flex;align-items:center;justify-content:center;padding:0}
+  .bottomnav{bottom:max(12px,env(safe-area-inset-bottom))}
+}

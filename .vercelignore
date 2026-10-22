@@ -16,3 +16,11 @@ assets/**/*.png
 assets/**/*.webp
 assets/**/*.avif
 assets/**/*.gif
+
+# Local QA captures and test-only scripts must not be deployed.
+output/
+.playwright-cli/
+tests/
+scripts/*-capture.cjs
+scripts/submit-sandbox-payment.cjs
+scripts/meta-pixel-audit.cjs

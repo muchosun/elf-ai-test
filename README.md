@@ -26,7 +26,7 @@ npm run preview -- --port 4174
 
 События: `preland_view`, `preland_cta`, `preland_period`, `preland_faq`, `screen_view`, `topic_select`, `identity_select`, `template_select`, `character_select`, `category_select`, `plan_select`, `checkout_intent`, `checkout_redirect`, `checkout_error`, `promo_intent`, `photo_selected`, `search`. UTM сохраняются в событиях и в URL перехода с преленда на регистрацию.
 
-Сейчас события сохраняются **только в браузере посетителя** (`localStorage['elf.events']`). Общего отчета по трафику пока нет. Для подключения согласованной аналитики можно подписаться на `elf:analytics` или определить `window.ELF_ANALYTICS(event)` перед загрузкой приложения. Файлы фотографий, имя файла, пароли и платежные данные не входят в события.
+Внутренний журнал событий сохраняется в браузере (`localStorage['elf.events']`). Дополнительно подключён браузерный Meta Pixel `1003891172735447` на преленде и в приложении. Для подключения согласованной аналитики можно подписаться на `elf:analytics` или определить `window.ELF_ANALYTICS(event)` перед загрузкой приложения. Файлы фотографий, имя файла, пароли и платежные данные не входят в события.
 
 ## Границы
 
@@ -117,3 +117,16 @@ Replace the previous `www` CNAME to muchosun.github.io; preserve unrelated mail/
 Images and videos are served directly from `https://muchosun.github.io/elf-ai-test/assets/` with proper image/video MIME types and range support. The custom-domain redirect was removed and the GitHub CDN now serves these assets directly. The hero uses the lossless faststart version; other creative files are unchanged. Heavy media files are excluded from Vercel upload/build output; UI code, fonts and icons remain on Vercel.
 
 Hero uses `27f7409ecc6b255a-faststart.mp4` from source commit `44514de2cd4ab91f244664026b44695ee9e4fe71`. FFmpeg stream-copy moved the MP4 index (`moov`) from byte 2,569,351 to byte 32. Encoded media payload SHA-256 is identical in both versions: `cbb788ceb203dcfa308b86302e2bea46d9305f77c391d6c79577fe1f9a62ec33`. No re-encoding or visual changes. Local-network full-file curl checks of original 2.57 MB video: Vercel 2.98/7.92/7.03 s; GitHub raw 3.05/15.85/13.68 s. These measure full transfers, not first frame; changing host alone did not prove faster startup.
+
+
+## Meta Pixel (22.10.2026, локальная интеграция)
+
+- `PageView` — загрузка преленда или приложения.
+- `CompleteRegistration` — только после успешного создания локального аккаунта; вход и перезагрузка его не повторяют.
+- `InitiateCheckout` — после получения проверенного sandbox URL от функции, перед переходом к провайдеру. Передаются код тарифа, полная сумма, USD и `sandbox: true`. Annual Starter = 72 USD, не 6 USD.
+- `SandboxCheckoutReturn` — однократно на возврате success, совпадающем с созданным в этой вкладке checkout. Параметры: `sandbox: true`, `payment_verified: false`. Совпадение защищает от случайных повторов, но не подтверждает оплату.
+- `Purchase` пока не отправляется: URL возврата можно подделать; API/webhook подтверждения статуса в проекте отсутствует. Нужен серверный статус с проверенными ID, суммой, валютой и sandbox/live режимом. Sandbox-конверсии не следует смешивать с реальными покупками.
+
+Секрет Events Manager / Conversions API для браузерного Pixel не нужен и в код не добавлен. Email, пароль, фото и данные карты не передаются в параметрах событий. Автоматическое распознавание форм отключено; используются явные вызовы событий. Сам Pixel получает обычные браузерные данные и адрес страницы.
+
+Проверки: `npm test` и `scripts/meta-pixel-audit.cjs` через Playwright CLI. Браузерный прогон подменяет SDK транспортом с перехватом: проверяет вызовы и параметры, не отправляя тестовые конверсии в Meta. Это не подтверждение получения событий в Events Manager. Результаты: `output/playwright/meta-pixel-20261022/results.json`. Публикация в рамках этого изменения не выполнялась.

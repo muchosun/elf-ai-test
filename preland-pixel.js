@@ -1,0 +1,1 @@
+window.ElfPixel?.init();
