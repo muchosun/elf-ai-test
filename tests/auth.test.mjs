@@ -9,6 +9,12 @@ const reload=()=>import(`../auth.js?test=${++version}`);
 const form=(mode,email,password)=>{const parts={email:{value:email},password:{value:password},error:{hidden:true,textContent:''},button:{disabled:false,textContent:'Continue'}};return {dataset:{mode},querySelector:s=>s==='[name=email]'?parts.email:s==='[name=password]'?parts.password:s==='#auth-error'?parts.error:parts.button,reportValidity:()=>true,reset(){parts.email.value='';parts.password.value=''},parts}};
 let auth=await reload();
 assert.equal(auth.signedIn(),false);
+for(const mode of ['signup','login']){
+ const screen=auth.authScreen(mode);
+ assert.equal((screen.match(/data-action="auth-provider"/g)||[]).length,1);
+ assert.ok(screen.includes('data-provider="Google"'));
+ assert.ok(!screen.includes('data-provider="Facebook"')&&!screen.includes('data-provider="Apple"')&&!screen.includes('data-provider="X.com"'));
+}
 const password='Only-a-generated-test-password!';
 assert.ok(await auth.submitAuth(form('signup','preview@example.com',password)));
 assert.equal(auth.signedIn(),true);
