@@ -25,7 +25,7 @@
   }
   w.ElfPixel = Object.freeze({
     init: () => { try { init(); } catch {} },
-    registration: () => send('trackSingle', 'CompleteRegistration', {status: true, content_name: 'Elf device registration'}),
+    registration: (method='email') => send('trackSingle', 'CompleteRegistration', {status: true, content_name: method==='google'?'Elf Google registration':'Elf device registration', registration_method: method==='google'?'google':'email'}),
     checkoutOpened: ({plan, value, requestId}) => {
       if (typeof plan !== 'string' || !Number.isFinite(value) || value <= 0) return;
       try { w.sessionStorage.setItem(pendingKey, JSON.stringify({paymentId: 'elf_' + requestId})); } catch {}

@@ -1,4 +1,5 @@
 import './meta-pixel.js';
+import {completeGoogleRegistration} from './google-registration.js';
 import {observeLazyVideos} from './lazy-video.js';
 let stopMedia=()=>{};
 import {mediaURL as local} from './media.js';
@@ -13,7 +14,8 @@ const checkoutReturn = checkoutReturnURL(checkoutReturnHref);
 if (checkoutReturn) history.replaceState(null, '', checkoutReturn);
 window.ElfPixel?.init();
 window.ElfPixel?.checkoutReturn(checkoutReturnHref);
-await initializeSocialAuth();
+const googleSession=await initializeSocialAuth();
+try { completeGoogleRegistration(googleSession,window.ElfPixel,sessionStorage,localStorage); } catch {}
 if (!location.hash && !new URLSearchParams(location.search).has('entry') && !signedIn()) location.replace('./of-creators.html'+location.search);
 const catalog=await (await fetch('./catalog.json')).json();
 const $=s=>document.querySelector(s), esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

@@ -1,3 +1,4 @@
+import {beginGoogleRegistration} from './google-registration.js';
 export async function loadSocialSession(fetcher = fetch) {
   try {
     const response = await fetcher('/api/auth/session', {credentials:'same-origin', cache:'no-store', signal:AbortSignal.timeout(5000)});
@@ -12,7 +13,9 @@ export async function socialSignIn(label, fetcher = fetch) {
   const status = await fetcher('/api/auth/status',{credentials:'same-origin',cache:'no-store'});
   const settings = await status.json();
   if (!status.ok || !settings.providers?.some(p => p.id === id && p.enabled)) throw new Error('provider_not_configured');
-  return authPost(`signin/${id}`, fetcher);
+  const url=await authPost(`signin/${id}`, fetcher);
+  if(id==='google' && location.hash==='#signup') { try { beginGoogleRegistration(sessionStorage); } catch {} }
+  return url;
 }
 async function authPost(action, fetcher) {
   const csrf = await fetcher('/api/auth/csrf',{credentials:'same-origin',cache:'no-store'});

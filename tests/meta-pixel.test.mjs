@@ -7,6 +7,7 @@ vm.runInNewContext(readFileSync(new URL('../meta-pixel.js',import.meta.url),'utf
 window.ElfPixel.init();window.ElfPixel.init();
 assert.equal(calls.filter(c=>c[2]==='PageView').length,1);
 window.ElfPixel.registration();assert.equal(calls.at(-1)[2],'CompleteRegistration');
+window.ElfPixel.registration('google');assert.equal(calls.at(-1)[3].registration_method,'google');assert.ok(!JSON.stringify(calls.at(-1)).includes('@'));
 window.ElfPixel.checkoutOpened({plan:'annual',value:72,requestId:'test-order'});
 assert.equal(calls.at(-1)[2],'InitiateCheckout');assert.equal(calls.at(-1)[3].value,72);
 const count=calls.length;
