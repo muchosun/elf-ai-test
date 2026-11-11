@@ -5,7 +5,7 @@ const inbound=new URL(location.href),raw=inbound.searchParams.get('plan');
 const code=Object.hasOwn(checkoutPlans,raw)?raw:'annual';
 // Never forward arbitrary query strings to the input document or analytics.
 history.replaceState(null,'',location.pathname+'?plan='+encodeURIComponent(code));
-await import('../tracking-config.js');await import('../tracking.js');
+await import('../tracking-config.js');await import('../tracking.js');try{await import('../meta-pixel.js')}catch{}
 window.dataLayer=window.dataLayer||[];window.gtag=function(){window.dataLayer.push(arguments)};
 window.gtag('js',new Date());window.gtag('config',window.ELF_TRACKING_CONFIG.ga4Id,{
  send_page_view:false,ignore_referrer:true,page_location:location.origin+location.pathname,
@@ -29,6 +29,7 @@ window.addEventListener('message',event=>{
   location.replace('./test-checkout-result.html?plan='+encodeURIComponent(code)+'#completed');return;
  }
  if(stage==='invalid'){if(++invalidCount>10)return}else{if(seen.has(stage))return;seen.add(stage)}
+ if(stage==='opened')window.ElfPixel?.testCheckoutOpened({plan:code,value:checkoutPlans[code].amount,attemptId:attempt.id});
  window.ElfTracking.event(events[stage],{attempt_id:attempt.id,plan:code,value:checkoutPlans[code].amount,currency:'USD',outcome:'test_only'});
 });
 frame.src='./test-checkout/frame.html?plan='+encodeURIComponent(code);

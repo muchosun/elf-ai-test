@@ -21,5 +21,13 @@ assert.equal(calls.at(-1)[2],'CheckoutFailedReturn');assert.equal(calls.at(-1)[3
 const failureCount=calls.length;
 window.ElfPixel.checkoutReturn('https://elf.pink/?mavs_return=failure&merchant_payment_id=elf_failure-order');assert.equal(calls.length,failureCount);
 assert.ok(!calls.some(c=>['Purchase','PaymentDeclined'].includes(c[2])));
+const qaDetails={plan:'annual',value:72,attemptId:'c2ab1630-82bd-4267-9786-9618b32d3d85',email:'private@example.com',card:'4111111111111111'};
+assert.equal(window.ElfPixel.testCheckoutOpened(qaDetails),true);assert.equal(calls.at(-1)[2],'InitiateCheckout');assert.equal(calls.at(-1)[3].test_payment,true);assert.equal(calls.at(-1)[3].payment_verified,false);
+const qaCount=calls.length;assert.equal(window.ElfPixel.testCheckoutOpened(qaDetails),false);assert.equal(calls.length,qaCount);
+assert.equal(window.ElfPixel.testPaymentCompleted(qaDetails),true);assert.equal(calls.at(-1)[2],'TestPaymentSimulated');assert.equal(calls.at(-1)[4].eventID,'elf_qa_TestPaymentSimulated_'+qaDetails.attemptId);assert.ok(!JSON.stringify(calls.at(-1)).includes('private@example.com'));assert.ok(!JSON.stringify(calls.at(-1)).includes('4111111111111111'));
+const completeCount=calls.length;assert.equal(window.ElfPixel.testPaymentCompleted(qaDetails),false);assert.equal(calls.length,completeCount);
+assert.equal(window.ElfPixel.testPaymentCompleted({...qaDetails,attemptId:'not-a-uuid'}),false);assert.equal(window.ElfPixel.testPaymentCompleted({...qaDetails,plan:'private@example.com'}),false);assert.ok(!calls.some(c=>c[2]==='Purchase'));
 window.fbq=()=>{throw Error('blocked');};assert.doesNotThrow(()=>window.ElfPixel.registration());
 console.log('PASS: Pixel init once, registration, annual total, unmatched/unknown/replayed callbacks ignored, failure return has its own unverified event, no unverified Purchase, blocked analytics safe');
+
+console.log("PASS: QA Meta checkout/completion dedupe, safe UUID/catalog payloads, no field data and no default Purchase");

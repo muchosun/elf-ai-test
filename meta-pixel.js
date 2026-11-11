@@ -4,6 +4,7 @@
   const id = '1003891172735447';
   const pendingKey = 'elf.meta.checkout';
   let started = false;
+  const sentTestStages = new Set();
   function init() {
     if (started) return;
     started = true;
@@ -20,12 +21,21 @@
     w.fbq('init', id);
     w.fbq('trackSingle', id, 'PageView');
   }
-  function send(method, event, data) {
-    try { init(); w.fbq(method, id, event, data); } catch { /* Analytics must not break the funnel. */ }
+  function send(method, event, data, options) {
+    try { init(); if(options)w.fbq(method,id,event,data,options);else w.fbq(method,id,event,data); return true; } catch { return false; }
+  }
+  function sendTestStage(event, {plan,value,attemptId}={}) {
+    if(typeof plan!=='string'||!/^(monthly|annual|(?:creator|pro)_\d+_(?:monthly|annual))$/.test(plan)||!Number.isFinite(value)||value<=0||typeof attemptId!=='string'||!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(attemptId))return false;
+    const key=event+':'+attemptId;if(sentTestStages.has(key))return false;
+    const data={content_ids:[plan],content_type:'product',value,currency:'USD',num_items:1,sandbox:true,test_payment:true,payment_verified:false,qa_attempt_id:attemptId};
+    const ok=send(event==='InitiateCheckout'?'trackSingle':'trackSingleCustom',event,data,{eventID:'elf_qa_'+event+'_'+attemptId});
+    if(ok){sentTestStages.add(key);if(sentTestStages.size>100)sentTestStages.delete(sentTestStages.values().next().value)}return ok;
   }
   w.ElfPixel = Object.freeze({
     init: () => { try { init(); } catch {} },
     registration: (method='email') => send('trackSingle', 'CompleteRegistration', {status: true, content_name: method==='google'?'Elf Google registration':'Elf device registration', registration_method: method==='google'?'google':'email'}),
+    testCheckoutOpened: details => sendTestStage('InitiateCheckout',details),
+    testPaymentCompleted: details => sendTestStage('TestPaymentSimulated',details),
     checkoutOpened: ({plan, value, requestId}) => {
       if (typeof plan !== 'string' || !Number.isFinite(value) || value <= 0) return;
       try { w.sessionStorage.setItem(pendingKey, JSON.stringify({paymentId: 'elf_' + requestId})); } catch {}

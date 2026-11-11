@@ -31,7 +31,7 @@ Missing started/completed is not conclusive evidence of no input: blockers, cons
 - Child CSP: hashed inline script, local CSS, no analytics/recorder/dependencies, `connect-src 'none'; form-action 'none'; worker-src 'none'`. No input has a name attribute. Only fixed stage and bounded height messages leave the frame.
 - Parent validates iframe WindowProxy, opaque null origin, exact message shape and allowlisted stages. It never reads or forwards field values. Open/start/filled are emitted once per view; failed submits capped at10.
 - Fields clear before completion/back and on pagehide/pageshow. Parent persists only safe attempt metadata and the existing safe analytics queue/advertising attribution.
-- No Meta Pixel is loaded on the QA checkout. GA may generate standard host engagement events like scroll. no-referrer and noindex are set; noindex is not access control.
+- Meta Pixel is loaded only on the surrounding checkout host and the cleared result document, never inside the opaque-origin input frame. InitiateCheckout and custom TestPaymentSimulated contain catalog data and a random attempt UUID only. Automatic configuration is disabled. No default Purchase is emitted. GA may also generate standard host engagement events like scroll. no-referrer and noindex are set; noindex is not access control.
 - Browser extensions, OS/password managers and an existing service worker are outside the page's guarantee. This is not PCI certification or a production card-processing service.
 
 ## Build / QA
@@ -57,3 +57,7 @@ Display data is projected from the existing offers/checkoutPlans catalog in `tes
 Example: Starter Annual is80credits/month, $6monthly equivalent, $72for12months, compared with $9monthly/$108for12months; saving$36, rounded33%. The wording distinguishes the monthly equivalent from the yearly total. Initial HTML uses neutral loading placeholders instead of flashing a wrong plan price. The payment logic and GA event payloads are unchanged.
 
 Unit tests verify all14 catalog variants and arithmetic invariants. Browser QA checks Starter monthly/annual, Creator monthly/annual, highest Pro annual, mobile390/desktop1440, discount visibility, no horizontal overflow and a full simulated-payment completion. Screenshots: `output/playwright/elf-order-summary/`.
+
+## Full Meta funnel QA
+
+Browser stages: PageView → CompleteRegistration → InitiateCheckout → custom TestPaymentSimulated. Checkout hooks accept only safe catalog-shaped plan codes, numeric offer values and UUID attempts, ignore extra properties, and deduplicate each stage per attempt/page. Result consumption prevents refresh replay. A separate, explicitly authorized single Purchase for Meta activation may be sent in Meta Test Events after a real QA journey; it is not automatically emitted for ordinary visitors and is not bank payment proof. Full tracker verification requires the actual TrackWill entry URL.

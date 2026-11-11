@@ -9,10 +9,12 @@ const attempt=completed?consumeAttempt(attemptStorage,code):null;
 if(attempt){
  await import('../tracking-config.js');
  await import('../tracking.js');
+ try{await import('../meta-pixel.js')}catch{}
  window.dataLayer=window.dataLayer||[];window.gtag=function(){window.dataLayer.push(arguments)};
  window.gtag('js',new Date());
  window.gtag('config',window.ELF_TRACKING_CONFIG.ga4Id,{send_page_view:false,ignore_referrer:true,page_location:location.origin+location.pathname,...(location.hostname==='127.0.0.1'||location.hostname==='localhost'?{debug_mode:true}:{})});
  window.ElfTracking.event('checkout_form_completed',{attempt_id:attempt.id,plan:code,value:checkoutPlans[code].amount,currency:'USD',outcome:'test_only'});
  window.ElfTracking.event('qa_payment_simulated',{attempt_id:attempt.id,plan:code,value:checkoutPlans[code].amount,currency:'USD',outcome:'test_only'});
+ window.ElfPixel?.testPaymentCompleted({plan:code,value:checkoutPlans[code].amount,attemptId:attempt.id});
  const tag=document.createElement('script');tag.async=true;tag.src='https://www.googletagmanager.com/gtag/js?id='+encodeURIComponent(window.ELF_TRACKING_CONFIG.ga4Id);document.head.append(tag);
 }
