@@ -31,6 +31,8 @@ This is test intent, not purchase revenue or money transferred. No purchase even
 5. Verify sign_up and qa_payment_simulated in Realtime/DebugView with a labeled QA visit, then inspect reporting after processing. Mark these as key events only under their actual names; do not relabel a simulation as purchase.
 6. Compare controlled test attempts with collector results. Keep QA and business reports separate.
 
+Before custom definitions are available, `report-order-value-fallback.json` uses the built-in `eventValue` metric filtered to qa_payment_simulated only, without unregistered plan dimensions. This provides a selected-amount total after GA4 processing without a new custom metric. Custom definitions may take 24–48 hours to become usable after creation; do not treat collector acknowledgements as populated reports.
+
 ## Potential volume
 
 Once non-QA data exists: expected completed test intents = planned unique eligible visitors × measured visitor-to-test-intent rate. Expected selected order amount = expected intents × average selected total. This is a scenario, not a revenue forecast; expose sample size, observation period, traffic/geography/device mix and uncertainty. No production baseline is currently confirmed in accessible GA4, so no numerical forecast is asserted.
