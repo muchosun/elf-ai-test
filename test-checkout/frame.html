@@ -1,5 +1,5 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-8HaHwE5u7xzK8bi5uZJznuf0PPSj1fXHC8prR4zCpsU='; style-src 'self'; img-src data:; connect-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'; worker-src 'none'">
+<!doctype html><html lang="en" class="checkout-frame-root"><head><meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-Q5R/fD4JviS8XMot/hiCjdlWnx35oub0kJ6Ti3LduSA='; style-src 'self'; img-src data:; connect-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'; worker-src 'none'">
 <meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="no-referrer"><link rel="icon" href="data:,"><link rel="stylesheet" href="../test-checkout.css"><title>Elf — Isolated test form</title></head><body class="form-frame mavs-style">
 <header><span class="logo">elf</span></header>
 <main><section class="order-column"><h1>Order summary</h1><div class="order-summary"><p id="plan">Starter Annual</p><div class="total-row"><span>Total</span><span id="price">$72.00</span></div><div class="payment-brands" aria-label="Visa and Mastercard"><span class="brand visa" role="img" aria-label="Visa"><svg class="visa-mark" aria-hidden="true" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Visa</title><path d="M9.112 8.262L5.97 15.758H3.92L2.374 9.775c-.094-.368-.175-.503-.461-.658C1.447 8.864.677 8.627 0 8.479l.046-.217h3.3a.904.904 0 01.894.764l.817 4.338 2.018-5.102zm8.033 5.049c.008-1.979-2.736-2.088-2.717-2.972.006-.269.262-.555.822-.628a3.66 3.66 0 011.913.336l.34-1.59a5.207 5.207 0 00-1.814-.333c-1.917 0-3.266 1.02-3.278 2.479-.012 1.079.963 1.68 1.698 2.04.756.367 1.01.603 1.006.931-.005.504-.602.725-1.16.734-.975.015-1.54-.263-1.992-.473l-.351 1.642c.453.208 1.289.39 2.156.398 2.037 0 3.37-1.006 3.377-2.564m5.061 2.447H24l-1.565-7.496h-1.656a.883.883 0 00-.826.55l-2.909 6.946h2.036l.405-1.12h2.488zm-2.163-2.656l1.02-2.815.588 2.815zm-8.16-4.84l-1.603 7.496H8.34l1.605-7.496z"/></svg></span><span class="brand mastercard" role="img" aria-label="Mastercard"><svg class="mastercard-mark" aria-hidden="true" viewBox="0 0 999.2 618" xmlns="http://www.w3.org/2000/svg"><g>
@@ -13,13 +13,57 @@
 </g></svg></span></div></div><button type="button" class="back" id="back">← Back to plans</button></section>
 <section class="payment-column"><h2 class="sr-only">Checkout</h2><p class="notice" role="note"><strong>Test checkout — no payment is processed.</strong>Use synthetic test details only. Do not enter real card or personal information.</p>
 <form autocomplete="off" novalidate><label for="cardholder">Name on card</label><input id="cardholder" type="text" autocomplete="off" maxlength="80" placeholder="ex. John Smith" spellcheck="false" aria-describedby="name-hint"><span id="name-hint" class="sr-only">Use a fictional first and last name.</span>
-<label for="number">Card number</label><div class="number-field"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 9h18"/></svg><input id="number" type="text" inputmode="numeric" autocomplete="off" maxlength="23" placeholder="0000 0000 0000 0000" spellcheck="false"></div>
-<div class="row"><div><label for="expiry">Expiry date</label><input id="expiry" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="MM / YY" spellcheck="false"></div><div><label for="cvc">Security code</label><input id="cvc" type="text" inputmode="numeric" autocomplete="off" maxlength="3" placeholder="CVV / CVC" spellcheck="false"></div></div>
+<label for="number">Card number</label><div class="number-field"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 9h18"/></svg><span id="detected-brand" class="detected-brand" aria-hidden="true"></span><input id="number" type="text" inputmode="numeric" autocomplete="off" maxlength="23" placeholder="0000 0000 0000 0000" spellcheck="false" aria-describedby="number-error brand-status"><span id="brand-status" class="sr-only" role="status" aria-live="polite"></span></div><p class="field-error" id="number-error" hidden></p>
+<div class="row"><div><label for="expiry">Expiry date</label><input id="expiry" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="MM / YY" spellcheck="false" aria-describedby="expiry-error"><p class="field-error" id="expiry-error" hidden></p></div><div><label for="cvc">Security code</label><input id="cvc" type="text" inputmode="numeric" autocomplete="off" maxlength="3" placeholder="CVV / CVC" spellcheck="false" aria-describedby="cvc-error"><p class="field-error" id="cvc-error" hidden></p></div></div>
 <p id="error" role="alert" aria-live="polite"></p><button type="submit">Submit</button></form>
 <div class="language"><span aria-hidden="true">◎</span> English</div>
 <div class="payment-legal"><svg class="shield" aria-hidden="true" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2 3 6v6c0 5 9 10 9 10s9-5 9-10V6z"/><path d="m7 12 3 3 7-7" fill="none" stroke="white" stroke-width="2"/></svg><div><p>Test entries stay in this form and are cleared on completion.</p><p>By clicking Submit, you confirm that you are 18 or older and have read our <button type="button" class="legal-link" data-info="terms">Test Terms of Service</button> and <button type="button" class="legal-link" data-info="privacy">Privacy Notice</button>.</p></div></div>
 <dialog id="legal-dialog" aria-labelledby="legal-title"><h2 id="legal-title"></h2><p id="legal-text"></p><button type="button" id="legal-close">Close</button></dialog>
-</section></main><script>(()=>{
+</section></main><script>// Local presentation only; these functions do not verify a bank card or send data.
+const digitsOnly=value=>String(value).replace(/\D/g,'');
+function formatCardNumber(value){return digitsOnly(value).slice(0,19).replace(/(.{4})(?=.)/g,'$1 ')}
+function formatExpiry(value){const digits=digitsOnly(value).slice(0,4);return digits.length>2?digits.slice(0,2)+' / '+digits.slice(2):digits}
+function detectCardBrand(value){
+ const digits=digitsOnly(value);if(digits.startsWith('4'))return 'visa';
+ const prefix=Number(digits.slice(0,4));
+ if(/^5[1-5]/.test(digits)||(digits.length>=4&&prefix>=2221&&prefix<=2720))return 'mastercard';
+ return '';
+}
+function passesLuhn(value){
+ const digits=digitsOnly(value);if(!/^\d{13,19}$/.test(digits)||/^0+$/.test(digits))return false;
+ let sum=0;for(let i=digits.length-1,twice=false;i>=0;i--,twice=!twice){let digit=Number(digits[i]);if(twice){digit*=2;if(digit>9)digit-=9}sum+=digit}return sum%10===0;
+}
+function expiryIsCurrent(value,year,month){
+ const digits=digitsOnly(value);if(digits.length!==4)return false;
+ const m=Number(digits.slice(0,2)),y=2000+Number(digits.slice(2));return m>=1&&m<=12&&(y>year||(y===year&&m>=month));
+}
+function digitCaret(formatted,count){
+ if(count<=0)return 0;let seen=0;for(let i=0;i<formatted.length;i++)if(/\d/.test(formatted[i])&&++seen===count)return i+1;return formatted.length;
+}
+function maskInput(input,format){
+ const raw=input.value,start=input.selectionStart??raw.length,end=input.selectionEnd??start;
+ const left=digitsOnly(raw.slice(0,start)).length,right=digitsOnly(raw.slice(0,end)).length;
+ input.value=format(raw);input.setSelectionRange(digitCaret(input.value,left),digitCaret(input.value,right));
+}
+function removeAcrossSeparator(input,event){
+ const start=input.selectionStart,end=input.selectionEnd,value=input.value;
+ if(start===null||start!==end)return;
+ if(event.inputType==='deleteContentBackward'&&start>0&&/\D/.test(value[start-1])){
+  let left=start-1;while(left>0&&/\D/.test(value[left]))left--;
+  event.preventDefault();input.setRangeText('',left,start,'end');input.dispatchEvent(new Event('input',{bubbles:true}));
+ }else if(event.inputType==='deleteContentForward'&&start<value.length&&/\D/.test(value[start])){
+  let right=start;while(right<value.length&&/\D/.test(value[right]))right++;
+  event.preventDefault();input.setRangeText('',start,Math.min(right+1,value.length),'end');input.dispatchEvent(new Event('input',{bubbles:true}));
+ }
+}
+function insertDigits(input,text,limit){
+ const start=input.selectionStart??input.value.length,end=input.selectionEnd??start;
+ const current=digitsOnly(input.value),left=digitsOnly(input.value.slice(0,start)).length,right=digitsOnly(input.value.slice(0,end)).length;
+ const incoming=digitsOnly(text).slice(0,Math.max(0,limit-current.length+right-left));
+ input.value=current.slice(0,left)+incoming+current.slice(right);input.setSelectionRange(left+incoming.length,left+incoming.length);input.dispatchEvent(new Event('input',{bubbles:true}));
+}
+
+(()=>{
  'use strict';
  const plans={"monthly":{"label":"Starter Monthly","amount":9},"annual":{"label":"Starter Annual","amount":72},"creator_350_monthly":{"label":"Creator Monthly","amount":39},"creator_350_annual":{"label":"Creator Annual","amount":312},"pro_750_monthly":{"label":"Pro Monthly 750 credits","amount":79},"pro_750_annual":{"label":"Pro Annual 750 credits","amount":636},"pro_1500_monthly":{"label":"Pro Monthly 1500 credits","amount":149},"pro_1500_annual":{"label":"Pro Annual 1500 credits","amount":1188},"pro_2500_monthly":{"label":"Pro Monthly 2500 credits","amount":249},"pro_2500_annual":{"label":"Pro Annual 2500 credits","amount":2004},"pro_5000_monthly":{"label":"Pro Monthly 5000 credits","amount":499},"pro_5000_annual":{"label":"Pro Annual 5000 credits","amount":3996},"pro_10000_monthly":{"label":"Pro Monthly 10000 credits","amount":999},"pro_10000_annual":{"label":"Pro Annual 10000 credits","amount":8028}};
  const plan=new URLSearchParams(location.search).get('plan');
@@ -31,6 +75,25 @@
  const send=stage=>parent.postMessage({type:'elf-qa-checkout',stage},'*');
  const fixtures=[['4111111111111111','5555555555554444'],['12/30'],['123']];
  const holder=document.querySelector('#cardholder');
+ const number=document.querySelector('#number'),expiry=document.querySelector('#expiry'),cvc=document.querySelector('#cvc');
+ const brandSlot=document.querySelector('#detected-brand'),brandStatus=document.querySelector('#brand-status');
+ function updateBrand(){
+  const brand=detectCardBrand(number.value);brandSlot.replaceChildren();number.closest('.number-field').dataset.brand=brand;
+  if(brand){const logo=document.querySelector('.payment-brands .'+brand+' svg').cloneNode(true);brandSlot.append(logo)}
+  const label=brand==='visa'?'Visa':brand==='mastercard'?'Mastercard':'';brandStatus.textContent=label;
+  document.querySelectorAll('.payment-brands .brand').forEach(icon=>icon.classList.toggle('brand-inactive',Boolean(brand)&&!icon.classList.contains(brand)));
+ }
+ function fieldError(input,message){input.setAttribute('aria-invalid',String(Boolean(message)));const target=document.getElementById(input.id+'-error');target.textContent=message;target.hidden=!message}
+ for(const [input,format,limit]of [[number,formatCardNumber,19],[expiry,formatExpiry,4],[cvc,value=>digitsOnly(value).slice(0,3),3]]){
+  input.addEventListener('beforeinput',event=>{if(!event.isComposing&&event.inputType.startsWith('insert')&&event.data&&/\D/.test(event.data)){event.preventDefault();insertDigits(input,event.data,limit)}else removeAcrossSeparator(input,event)});
+  input.addEventListener('paste',event=>{if(event.clipboardData){event.preventDefault();insertDigits(input,event.clipboardData.getData('text/plain'),limit)}});
+  input.addEventListener('input',event=>{if(event.isComposing)return;maskInput(input,format);fieldError(input,'');if(input===number)updateBrand()});
+  input.addEventListener('compositionend',()=>{maskInput(input,format);if(input===number)updateBrand()});
+ }
+ number.addEventListener('blur',()=>fieldError(number,number.value&&(!detectCardBrand(number.value)||!passesLuhn(number.value))?'Check the test card number.':''));
+ expiry.addEventListener('blur',()=>{const now=new Date();fieldError(expiry,expiry.value&&!expiryIsCurrent(expiry.value,now.getFullYear(),now.getMonth()+1)?'Enter a valid future date.':'')});
+ cvc.addEventListener('blur',()=>fieldError(cvc,cvc.value&&cvc.value.length!==3?'Enter 3 digits.':''));
+ form.addEventListener('reset',()=>queueMicrotask(()=>{updateBrand();for(const input of [number,expiry,cvc])fieldError(input,'')}));
  let started=false,filled=false,completed=false;
  const reportFilled=()=>{if(!started&&inputs.some(input=>input.value.trim())){started=true;send('started')}if(!filled&&inputs.every(input=>input.value.trim())){filled=true;send('filled')}};
  form.addEventListener('input',()=>{if(!started){started=true;send('started')}reportFilled();error.textContent=''});

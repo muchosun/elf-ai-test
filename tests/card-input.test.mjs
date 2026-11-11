@@ -1,0 +1,12 @@
+import assert from 'node:assert/strict';
+import {formatCardNumber,formatExpiry,detectCardBrand,passesLuhn,expiryIsCurrent,digitCaret} from '../test-checkout/card-input.js';
+assert.equal(formatCardNumber('4111-1111 abc1111 1111'),'4111 1111 1111 1111');
+assert.equal(formatCardNumber('12345678901234567890123'),'1234 5678 9012 3456 789');
+assert.equal(formatExpiry('12/30'),'12 / 30');assert.equal(formatExpiry('1'),'1');assert.equal(formatExpiry('123045'),'12 / 30');
+for(const n of ['4','4111111111111111'])assert.equal(detectCardBrand(n),'visa');
+for(const n of ['51','55','2221','2720','5555555555554444'])assert.equal(detectCardBrand(n),'mastercard');
+for(const n of ['','50','56','2220','2721','6'])assert.equal(detectCardBrand(n),'');
+assert.equal(passesLuhn('4111 1111 1111 1111'),true);assert.equal(passesLuhn('5555555555554444'),true);assert.equal(passesLuhn('4111111111111112'),false);assert.equal(passesLuhn('0000000000000000'),false);
+assert.equal(expiryIsCurrent('12 / 30',2026,11),true);assert.equal(expiryIsCurrent('11/26',2026,11),true);assert.equal(expiryIsCurrent('10/26',2026,11),false);assert.equal(expiryIsCurrent('13/30',2026,11),false);assert.equal(expiryIsCurrent('12/3',2026,11),false);
+assert.equal(digitCaret('4111 1111',4),4);assert.equal(digitCaret('4111 1111',5),6);assert.equal(digitCaret('12 / 30',3),6);
+console.log('PASS: local card/expiry masks, brand prefix boundaries, checksum, expiry boundaries and digit-based caret');

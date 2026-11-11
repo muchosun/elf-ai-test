@@ -10,6 +10,25 @@
  const send=stage=>parent.postMessage({type:'elf-qa-checkout',stage},'*');
  const fixtures=[['4111111111111111','5555555555554444'],['12/30'],['123']];
  const holder=document.querySelector('#cardholder');
+ const number=document.querySelector('#number'),expiry=document.querySelector('#expiry'),cvc=document.querySelector('#cvc');
+ const brandSlot=document.querySelector('#detected-brand'),brandStatus=document.querySelector('#brand-status');
+ function updateBrand(){
+  const brand=detectCardBrand(number.value);brandSlot.replaceChildren();number.closest('.number-field').dataset.brand=brand;
+  if(brand){const logo=document.querySelector('.payment-brands .'+brand+' svg').cloneNode(true);brandSlot.append(logo)}
+  const label=brand==='visa'?'Visa':brand==='mastercard'?'Mastercard':'';brandStatus.textContent=label;
+  document.querySelectorAll('.payment-brands .brand').forEach(icon=>icon.classList.toggle('brand-inactive',Boolean(brand)&&!icon.classList.contains(brand)));
+ }
+ function fieldError(input,message){input.setAttribute('aria-invalid',String(Boolean(message)));const target=document.getElementById(input.id+'-error');target.textContent=message;target.hidden=!message}
+ for(const [input,format,limit]of [[number,formatCardNumber,19],[expiry,formatExpiry,4],[cvc,value=>digitsOnly(value).slice(0,3),3]]){
+  input.addEventListener('beforeinput',event=>{if(!event.isComposing&&event.inputType.startsWith('insert')&&event.data&&/\D/.test(event.data)){event.preventDefault();insertDigits(input,event.data,limit)}else removeAcrossSeparator(input,event)});
+  input.addEventListener('paste',event=>{if(event.clipboardData){event.preventDefault();insertDigits(input,event.clipboardData.getData('text/plain'),limit)}});
+  input.addEventListener('input',event=>{if(event.isComposing)return;maskInput(input,format);fieldError(input,'');if(input===number)updateBrand()});
+  input.addEventListener('compositionend',()=>{maskInput(input,format);if(input===number)updateBrand()});
+ }
+ number.addEventListener('blur',()=>fieldError(number,number.value&&(!detectCardBrand(number.value)||!passesLuhn(number.value))?'Check the test card number.':''));
+ expiry.addEventListener('blur',()=>{const now=new Date();fieldError(expiry,expiry.value&&!expiryIsCurrent(expiry.value,now.getFullYear(),now.getMonth()+1)?'Enter a valid future date.':'')});
+ cvc.addEventListener('blur',()=>fieldError(cvc,cvc.value&&cvc.value.length!==3?'Enter 3 digits.':''));
+ form.addEventListener('reset',()=>queueMicrotask(()=>{updateBrand();for(const input of [number,expiry,cvc])fieldError(input,'')}));
  let started=false,filled=false,completed=false;
  const reportFilled=()=>{if(!started&&inputs.some(input=>input.value.trim())){started=true;send('started')}if(!filled&&inputs.every(input=>input.value.trim())){filled=true;send('filled')}};
  form.addEventListener('input',()=>{if(!started){started=true;send('started')}reportFilled();error.textContent=''});
