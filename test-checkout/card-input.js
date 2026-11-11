@@ -41,8 +41,8 @@ export function insertDigits(input,text,limit){
  const incoming=digitsOnly(text).slice(0,Math.max(0,limit-current.length+right-left));
  input.value=current.slice(0,left)+incoming+current.slice(right);input.setSelectionRange(left+incoming.length,left+incoming.length);input.dispatchEvent(new Event('input',{bubbles:true}));
 }
+// Any card format is accepted: brand detection and the checksum are presentation only.
 export function canSimulatePayment(holder,number,expiry,cvc,year,month){
- const digits=digitsOnly(number),brand=detectCardBrand(digits);
- const lengthOK=brand==='visa'?[13,16,19].includes(digits.length):brand==='mastercard'&&digits.length===16;
- return Boolean(/^[a-z][a-z '-]{0,38}\s[a-z][a-z '-]{0,38}$/i.test(holder.trim())&&lengthOK&&passesLuhn(digits)&&expiryIsCurrent(expiry,year,month)&&/^\d{3}$/.test(cvc));
+ const digits=digitsOnly(number);
+ return Boolean(holder.trim().length>=2&&/^\d{12,19}$/.test(digits)&&expiryIsCurrent(expiry,year,month)&&/^\d{3,4}$/.test(cvc));
 }

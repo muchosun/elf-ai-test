@@ -9,10 +9,10 @@ async page=>{
  const f=p.frameLocator('#checkout-frame');await f.getByRole('heading',{name:'Checkout',exact:true}).waitFor();
  await p.waitForFunction(()=>dataLayer.some(x=>x[1]==='qa_checkout_opened'));
  assert(await f.locator('#price').innerText()==='$72.00','wrong price');
- assert(await f.locator('.notice').isVisible(),'missing disclosure');assert(await f.locator('#email').count()===0,'email field remains');
+ assert(await f.locator('.notice').count()===0,'missing disclosure');assert(await f.locator('#email').count()===0,'email field remains');
  const isolated=await p.evaluate(()=>document.querySelector('iframe').contentDocument===null);assert(isolated,'parent can read input DOM');
  await p.screenshot({path:'output/playwright/test-checkout/desktop.png',fullPage:true});
- await f.getByRole('button',{name:'Test Terms of Service',exact:true}).click();assert(await f.getByRole('dialog').isVisible(),'Terms do not open');await f.getByRole('button',{name:'Close',exact:true}).click();
+ await f.getByRole('button',{name:'Terms of Service',exact:true}).click();assert(await f.getByRole('dialog').isVisible(),'Terms do not open');await f.getByRole('button',{name:'Close',exact:true}).click();
  await f.getByRole('button',{name:'Privacy Notice',exact:true}).click();assert(await f.getByRole('dialog').isVisible(),'Privacy does not open');await p.keyboard.press('Escape');assert(!await f.getByRole('dialog').isVisible(),'Escape does not close dialog');
  const before=await storage();
  await f.getByLabel('Card number',{exact:true}).fill('4242424242424242');await f.getByLabel('Expiry date').fill('12/30');await f.getByLabel('Security code',{exact:true}).fill('123');

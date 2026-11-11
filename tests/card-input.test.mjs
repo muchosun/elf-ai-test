@@ -13,8 +13,12 @@ console.log('PASS: local card/expiry masks, brand prefix boundaries, checksum, e
 const {canSimulatePayment}=await import('../test-checkout/card-input.js');
 assert.equal(canSimulatePayment('Alex Example','4242 4200 0000 1230','09 / 33','456',2026,11),true);
 assert.equal(canSimulatePayment('Alex Example','5555 5555 5555 4444','09 / 33','456',2026,11),true);
-assert.equal(canSimulatePayment('Alex Example','4242420000001231','09/33','456',2026,11),false);
+// Any card format works: the checksum and brand are not required.
+assert.equal(canSimulatePayment('Alex Example','4242420000001231','09/33','456',2026,11),true);
+assert.equal(canSimulatePayment('Alex Example','378282246310005','09/33','4567',2026,11),true);
+assert.equal(canSimulatePayment('Alex','123456789012','09/33','999',2026,11),true);
+assert.equal(canSimulatePayment('Alex Example','4242420000','09/33','456',2026,11),false);
 assert.equal(canSimulatePayment('Alex Example','4242420000001230','10/26','456',2026,11),false);
 assert.equal(canSimulatePayment('Alex Example','4242420000001230','09/33','45',2026,11),false);
 assert.equal(canSimulatePayment('','4242420000001230','09/33','456',2026,11),false);
-console.log('PASS: generated valid-format synthetic numbers complete simulation; checksum, expiry, incomplete CVC and name errors do not');
+console.log('PASS: any 12-19 digit card with a future expiry and 3-4 digit CVC completes; short number, past expiry, incomplete CVC and empty name do not');

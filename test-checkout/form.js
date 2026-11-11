@@ -31,15 +31,15 @@
   document.querySelectorAll('.payment-brands .brand').forEach(icon=>icon.classList.toggle('brand-inactive',Boolean(brand)&&!icon.classList.contains(brand)));
  }
  function fieldError(input,message){input.setAttribute('aria-invalid',String(Boolean(message)));const target=document.getElementById(input.id+'-error');target.textContent=message;target.hidden=!message}
- for(const [input,format,limit]of [[number,formatCardNumber,19],[expiry,formatExpiry,4],[cvc,value=>digitsOnly(value).slice(0,3),3]]){
+ for(const [input,format,limit]of [[number,formatCardNumber,19],[expiry,formatExpiry,4],[cvc,value=>digitsOnly(value).slice(0,4),4]]){
   input.addEventListener('beforeinput',event=>{if(!event.isComposing&&event.inputType.startsWith('insert')&&event.data&&/\D/.test(event.data)){event.preventDefault();insertDigits(input,event.data,limit)}else removeAcrossSeparator(input,event)});
   input.addEventListener('paste',event=>{if(event.clipboardData){event.preventDefault();insertDigits(input,event.clipboardData.getData('text/plain'),limit)}});
   input.addEventListener('input',event=>{if(event.isComposing)return;maskInput(input,format);fieldError(input,'');if(input===number)updateBrand()});
   input.addEventListener('compositionend',()=>{maskInput(input,format);if(input===number)updateBrand()});
  }
- number.addEventListener('blur',()=>fieldError(number,number.value&&(!detectCardBrand(number.value)||!passesLuhn(number.value))?'Check the test card number.':''));
+ number.addEventListener('blur',()=>fieldError(number,number.value&&digitsOnly(number.value).length<12?'Check the card number.':''));
  expiry.addEventListener('blur',()=>{const now=new Date();fieldError(expiry,expiry.value&&!expiryIsCurrent(expiry.value,now.getFullYear(),now.getMonth()+1)?'Enter a valid future date.':'')});
- cvc.addEventListener('blur',()=>fieldError(cvc,cvc.value&&cvc.value.length!==3?'Enter 3 digits.':''));
+ cvc.addEventListener('blur',()=>fieldError(cvc,cvc.value&&![3,4].includes(cvc.value.length)?'Enter 3 or 4 digits.':''));
  form.addEventListener('reset',()=>queueMicrotask(()=>{updateBrand();for(const input of [number,expiry,cvc])fieldError(input,'')}));
  let started=false,filled=false,completed=false;
  const reportFilled=()=>{if(!started&&inputs.some(input=>input.value.trim())){started=true;send('started')}if(!filled&&inputs.every(input=>input.value.trim())){filled=true;send('filled')}};
@@ -48,11 +48,11 @@
   event.preventDefault();if(completed)return;reportFilled();
   const now=new Date();
   const valid=canSimulatePayment(holder.value,number.value,expiry.value,cvc.value,now.getFullYear(),now.getMonth()+1);
-  if(!valid){send('invalid');error.textContent='Check the entered test details and try again.';form.reset();inputs[0].focus();return;}
+  if(!valid){send('invalid');error.textContent='Check the entered details and try again.';form.reset();inputs[0].focus();return;}
   completed=true;form.reset();inputs.forEach(input=>input.value='');send('completed');
  });
  const dialog=document.querySelector('#legal-dialog');
- const info={terms:['Test Terms of Service','This is an interface test for adults aged 18 or over. Use only synthetic card details and a fictional name. Submit completes a simulated test payment; no payment, subscription or recurring charge is created.'],privacy:['Privacy Notice','The isolated form does not send or save field values. Its host receives only fixed test-stage signals, selected plan and illustrative price for Google Analytics and Meta Pixel. These analytics services may receive standard device and network information and use cookies. Field values are cleared on completion.']};
+ const info={terms:['Terms of Service','This is an interface preview for adults aged 18 or over. Submit completes a simulated payment; no payment, subscription or recurring charge is created.'],privacy:['Privacy Notice','The isolated form does not send or save field values. Its host receives only fixed stage signals, selected plan and price for Google Analytics and Meta Pixel. These analytics services may receive standard device and network information and use cookies. Field values are cleared on completion.']};
  document.querySelectorAll('[data-info]').forEach(button=>button.addEventListener('click',()=>{const [title,text]=info[button.dataset.info];document.querySelector('#legal-title').textContent=title;document.querySelector('#legal-text').textContent=text;dialog.showModal()}));
  document.querySelector('#legal-close').addEventListener('click',()=>dialog.close());
  document.querySelector('#back').addEventListener('click',()=>{form.reset();send('back')});

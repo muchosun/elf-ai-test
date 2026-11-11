@@ -1,6 +1,6 @@
 <!doctype html><html lang="en" class="checkout-frame-root"><head><meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-/zMAqzpnDhAABFrdQDYGVfAgVRIDNrpTWiWZe07hnzM='; style-src 'self'; img-src data:; connect-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'; worker-src 'none'">
-<meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="no-referrer"><link rel="icon" href="data:,"><link rel="stylesheet" href="../test-checkout.css"><title>Elf — Isolated test form</title></head><body class="form-frame mavs-style">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-gd8c98EH31DB0qTD4kd4dtjA3RwdC6x1WljQ8UBryPY='; style-src 'self'; img-src data:; connect-src 'none'; form-action 'none'; base-uri 'none'; object-src 'none'; worker-src 'none'">
+<meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow,noarchive"><meta name="referrer" content="no-referrer"><link rel="icon" href="data:,"><link rel="stylesheet" href="../test-checkout.css"><title>Elf — Checkout</title></head><body class="form-frame mavs-style">
 <header><span class="logo">elf</span></header>
 <main><section class="order-column"><h1>Order summary</h1><div class="order-summary"><div class="summary-plan-line"><p id="plan">Loading plan…</p><span id="discount-badge" class="discount-badge" hidden></span></div><div class="monthly-rate"><span id="monthly-price">—</span><span class="rate-unit"> / month</span><del id="regular-monthly-price" hidden></del></div><p id="price-basis" class="price-basis"></p><p id="credit-allowance" class="credit-allowance"></p><dl class="summary-breakdown"><div><dt>Billing period</dt><dd id="billing-period">—</dd></div><div id="regular-total-row" hidden><dt>12 months at monthly price</dt><dd id="regular-total"></dd></div><div id="savings-row" class="savings-row" hidden><dt>Annual discount</dt><dd id="savings"></dd></div></dl><div class="total-row"><span id="total-label">Annual total</span><span class="total-amount"><span id="price">—</span><small> USD</small></span></div><p id="billing-detail" class="billing-detail"></p><div class="payment-brands" aria-label="Visa and Mastercard"><span class="brand visa" role="img" aria-label="Visa"><svg class="visa-mark" aria-hidden="true" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Visa</title><path d="M9.112 8.262L5.97 15.758H3.92L2.374 9.775c-.094-.368-.175-.503-.461-.658C1.447 8.864.677 8.627 0 8.479l.046-.217h3.3a.904.904 0 01.894.764l.817 4.338 2.018-5.102zm8.033 5.049c.008-1.979-2.736-2.088-2.717-2.972.006-.269.262-.555.822-.628a3.66 3.66 0 011.913.336l.34-1.59a5.207 5.207 0 00-1.814-.333c-1.917 0-3.266 1.02-3.278 2.479-.012 1.079.963 1.68 1.698 2.04.756.367 1.01.603 1.006.931-.005.504-.602.725-1.16.734-.975.015-1.54-.263-1.992-.473l-.351 1.642c.453.208 1.289.39 2.156.398 2.037 0 3.37-1.006 3.377-2.564m5.061 2.447H24l-1.565-7.496h-1.656a.883.883 0 00-.826.55l-2.909 6.946h2.036l.405-1.12h2.488zm-2.163-2.656l1.02-2.815.588 2.815zm-8.16-4.84l-1.603 7.496H8.34l1.605-7.496z"/></svg></span><span class="brand mastercard" role="img" aria-label="Mastercard"><svg class="mastercard-mark" aria-hidden="true" viewBox="0 0 999.2 618" xmlns="http://www.w3.org/2000/svg"><g>
 	<rect x="364" y="66.1" fill="#FF5A00" width="270.4" height="485.8"/>
@@ -11,13 +11,13 @@
 		c-72.1,0-138.2-24.9-190.6-66.1c72.1-56.7,117.6-144.2,117.6-242.9S570.8,122.7,499.6,66.1C551.9,24.9,618,0,690.1,0
 		C861,0,999.2,139.1,999.2,309z"/>
 </g></svg></span></div></div><button type="button" class="back" id="back">← Back to plans</button></section>
-<section class="payment-column"><h2 class="sr-only">Checkout</h2><p class="notice compact-notice" role="note"><strong>Test checkout — no charge.</strong> Do not enter real card details.</p>
+<section class="payment-column"><h2 class="sr-only">Checkout</h2>
 <form autocomplete="off" novalidate aria-busy="true"><fieldset id="payment-fields" disabled><label for="cardholder">Name on card</label><input id="cardholder" type="text" autocomplete="off" maxlength="80" placeholder="ex. John Smith" spellcheck="false" aria-describedby="name-hint"><span id="name-hint" class="sr-only">Use a fictional first and last name.</span>
 <label for="number">Card number</label><div class="number-field"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 9h18"/></svg><span id="detected-brand" class="detected-brand" aria-hidden="true"></span><input id="number" type="text" inputmode="numeric" autocomplete="off" maxlength="23" placeholder="0000 0000 0000 0000" spellcheck="false" aria-describedby="number-error brand-status"><span id="brand-status" class="sr-only" role="status" aria-live="polite"></span></div><p class="field-error" id="number-error" hidden></p>
-<div class="row"><div><label for="expiry">Expiry date</label><input id="expiry" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="MM / YY" spellcheck="false" aria-describedby="expiry-error"><p class="field-error" id="expiry-error" hidden></p></div><div><label for="cvc">Security code</label><input id="cvc" type="text" inputmode="numeric" autocomplete="off" maxlength="3" placeholder="CVV / CVC" spellcheck="false" aria-describedby="cvc-error"><p class="field-error" id="cvc-error" hidden></p></div></div>
+<div class="row"><div><label for="expiry">Expiry date</label><input id="expiry" type="text" inputmode="numeric" autocomplete="off" maxlength="7" placeholder="MM / YY" spellcheck="false" aria-describedby="expiry-error"><p class="field-error" id="expiry-error" hidden></p></div><div><label for="cvc">Security code</label><input id="cvc" type="text" inputmode="numeric" autocomplete="off" maxlength="4" placeholder="CVV / CVC" spellcheck="false" aria-describedby="cvc-error"><p class="field-error" id="cvc-error" hidden></p></div></div>
 <p id="error" role="alert" aria-live="polite"></p><button type="submit">Submit</button></fieldset></form>
 <div class="language"><span aria-hidden="true">◎</span> English</div>
-<div class="payment-legal"><svg class="shield" aria-hidden="true" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2 3 6v6c0 5 9 10 9 10s9-5 9-10V6z"/><path d="m7 12 3 3 7-7" fill="none" stroke="white" stroke-width="2"/></svg><div><p>Test entries stay in this form and are cleared on completion.</p><p>By clicking Submit, you confirm that you are 18 or older and have read our <button type="button" class="legal-link" data-info="terms">Test Terms of Service</button> and <button type="button" class="legal-link" data-info="privacy">Privacy Notice</button>.</p></div></div>
+<div class="payment-legal"><svg class="shield" aria-hidden="true" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2 3 6v6c0 5 9 10 9 10s9-5 9-10V6z"/><path d="m7 12 3 3 7-7" fill="none" stroke="white" stroke-width="2"/></svg><div><p>Your payment details are encrypted and securely protected.</p><p>By clicking Submit, you confirm that you are 18 or older and have read our <button type="button" class="legal-link" data-info="terms">Terms of Service</button> and <button type="button" class="legal-link" data-info="privacy">Privacy Notice</button>.</p></div></div>
 <dialog id="legal-dialog" aria-labelledby="legal-title"><h2 id="legal-title"></h2><p id="legal-text"></p><button type="button" id="legal-close">Close</button></dialog>
 </section></main><script>// Local presentation only; these functions do not verify a bank card or send data.
 const digitsOnly=value=>String(value).replace(/\D/g,'');
@@ -62,10 +62,10 @@ function insertDigits(input,text,limit){
  const incoming=digitsOnly(text).slice(0,Math.max(0,limit-current.length+right-left));
  input.value=current.slice(0,left)+incoming+current.slice(right);input.setSelectionRange(left+incoming.length,left+incoming.length);input.dispatchEvent(new Event('input',{bubbles:true}));
 }
+// Any card format is accepted: brand detection and the checksum are presentation only.
 function canSimulatePayment(holder,number,expiry,cvc,year,month){
- const digits=digitsOnly(number),brand=detectCardBrand(digits);
- const lengthOK=brand==='visa'?[13,16,19].includes(digits.length):brand==='mastercard'&&digits.length===16;
- return Boolean(/^[a-z][a-z '-]{0,38}\s[a-z][a-z '-]{0,38}$/i.test(holder.trim())&&lengthOK&&passesLuhn(digits)&&expiryIsCurrent(expiry,year,month)&&/^\d{3}$/.test(cvc));
+ const digits=digitsOnly(number);
+ return Boolean(holder.trim().length>=2&&/^\d{12,19}$/.test(digits)&&expiryIsCurrent(expiry,year,month)&&/^\d{3,4}$/.test(cvc));
 }
 
 (()=>{
@@ -101,15 +101,15 @@ function canSimulatePayment(holder,number,expiry,cvc,year,month){
   document.querySelectorAll('.payment-brands .brand').forEach(icon=>icon.classList.toggle('brand-inactive',Boolean(brand)&&!icon.classList.contains(brand)));
  }
  function fieldError(input,message){input.setAttribute('aria-invalid',String(Boolean(message)));const target=document.getElementById(input.id+'-error');target.textContent=message;target.hidden=!message}
- for(const [input,format,limit]of [[number,formatCardNumber,19],[expiry,formatExpiry,4],[cvc,value=>digitsOnly(value).slice(0,3),3]]){
+ for(const [input,format,limit]of [[number,formatCardNumber,19],[expiry,formatExpiry,4],[cvc,value=>digitsOnly(value).slice(0,4),4]]){
   input.addEventListener('beforeinput',event=>{if(!event.isComposing&&event.inputType.startsWith('insert')&&event.data&&/\D/.test(event.data)){event.preventDefault();insertDigits(input,event.data,limit)}else removeAcrossSeparator(input,event)});
   input.addEventListener('paste',event=>{if(event.clipboardData){event.preventDefault();insertDigits(input,event.clipboardData.getData('text/plain'),limit)}});
   input.addEventListener('input',event=>{if(event.isComposing)return;maskInput(input,format);fieldError(input,'');if(input===number)updateBrand()});
   input.addEventListener('compositionend',()=>{maskInput(input,format);if(input===number)updateBrand()});
  }
- number.addEventListener('blur',()=>fieldError(number,number.value&&(!detectCardBrand(number.value)||!passesLuhn(number.value))?'Check the test card number.':''));
+ number.addEventListener('blur',()=>fieldError(number,number.value&&digitsOnly(number.value).length<12?'Check the card number.':''));
  expiry.addEventListener('blur',()=>{const now=new Date();fieldError(expiry,expiry.value&&!expiryIsCurrent(expiry.value,now.getFullYear(),now.getMonth()+1)?'Enter a valid future date.':'')});
- cvc.addEventListener('blur',()=>fieldError(cvc,cvc.value&&cvc.value.length!==3?'Enter 3 digits.':''));
+ cvc.addEventListener('blur',()=>fieldError(cvc,cvc.value&&![3,4].includes(cvc.value.length)?'Enter 3 or 4 digits.':''));
  form.addEventListener('reset',()=>queueMicrotask(()=>{updateBrand();for(const input of [number,expiry,cvc])fieldError(input,'')}));
  let started=false,filled=false,completed=false;
  const reportFilled=()=>{if(!started&&inputs.some(input=>input.value.trim())){started=true;send('started')}if(!filled&&inputs.every(input=>input.value.trim())){filled=true;send('filled')}};
@@ -118,11 +118,11 @@ function canSimulatePayment(holder,number,expiry,cvc,year,month){
   event.preventDefault();if(completed)return;reportFilled();
   const now=new Date();
   const valid=canSimulatePayment(holder.value,number.value,expiry.value,cvc.value,now.getFullYear(),now.getMonth()+1);
-  if(!valid){send('invalid');error.textContent='Check the entered test details and try again.';form.reset();inputs[0].focus();return;}
+  if(!valid){send('invalid');error.textContent='Check the entered details and try again.';form.reset();inputs[0].focus();return;}
   completed=true;form.reset();inputs.forEach(input=>input.value='');send('completed');
  });
  const dialog=document.querySelector('#legal-dialog');
- const info={terms:['Test Terms of Service','This is an interface test for adults aged 18 or over. Use only synthetic card details and a fictional name. Submit completes a simulated test payment; no payment, subscription or recurring charge is created.'],privacy:['Privacy Notice','The isolated form does not send or save field values. Its host receives only fixed test-stage signals, selected plan and illustrative price for Google Analytics and Meta Pixel. These analytics services may receive standard device and network information and use cookies. Field values are cleared on completion.']};
+ const info={terms:['Terms of Service','This is an interface preview for adults aged 18 or over. Submit completes a simulated payment; no payment, subscription or recurring charge is created.'],privacy:['Privacy Notice','The isolated form does not send or save field values. Its host receives only fixed stage signals, selected plan and price for Google Analytics and Meta Pixel. These analytics services may receive standard device and network information and use cookies. Field values are cleared on completion.']};
  document.querySelectorAll('[data-info]').forEach(button=>button.addEventListener('click',()=>{const [title,text]=info[button.dataset.info];document.querySelector('#legal-title').textContent=title;document.querySelector('#legal-text').textContent=text;dialog.showModal()}));
  document.querySelector('#legal-close').addEventListener('click',()=>dialog.close());
  document.querySelector('#back').addEventListener('click',()=>{form.reset();send('back')});

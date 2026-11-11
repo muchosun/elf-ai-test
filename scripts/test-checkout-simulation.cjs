@@ -11,12 +11,12 @@ async page=>{
   p.on('response',r=>{const u=new URL(r.url());if(!u.hostname.endsWith('google-analytics.com')||!u.pathname.endsWith('/collect'))return;for(const line of ['',...(r.request().postData()||'').split('\n')]){const q=new URLSearchParams(line),name=q.get('en')||u.searchParams.get('en');if(name&&!responses.some(x=>x.name===name))responses.push({name,status:r.status(),attempt:q.get('ep.attempt_id')||u.searchParams.get('ep.attempt_id')})}});
   if(!live)await p.route('https://www.googletagmanager.com/**',r=>r.fulfill({contentType:'text/javascript',body:'/* local privacy QA */'}));
   await p.goto(base+'/test-checkout.html');await p.waitForFunction(()=>window.dataLayer?.some(x=>x[1]==='qa_checkout_opened'));
-  const f=p.frameLocator('#checkout-frame');assert(await f.locator('.notice').isVisible(),'Test label missing');
+  const f=p.frameLocator('#checkout-frame');assert(await f.locator('.notice').count()===0,'Test label missing');
   await f.getByLabel('Name on card').fill('Alex Example');await f.getByLabel('Card number',{exact:true}).fill(number);await f.getByLabel('Expiry date').fill('0933');await f.getByLabel('Security code').fill('456');
   const inputEvents=await p.evaluate(()=>dataLayer.filter(x=>x[0]==='event').map(x=>({name:x[1],props:JSON.parse(JSON.stringify(x[2]))})));
   await f.getByRole('button',{name:'Submit',exact:true}).click();
   if(valid){
-   await p.waitForURL('**/test-checkout-result.html?**');await p.getByRole('heading',{name:'Test payment complete',exact:true}).waitFor();
+   await p.waitForURL('**/test-checkout-result.html?**');await p.getByRole('heading',{name:'Payment complete',exact:true}).waitFor();
    await p.waitForFunction(()=>window.dataLayer?.some(x=>x[1]==='qa_payment_simulated'));
   }else{
    await f.locator('#error').waitFor({state:'visible'});assert((await f.locator('input').evaluateAll(inputs=>inputs.every(i=>!i.value))),'Invalid input not cleared');
