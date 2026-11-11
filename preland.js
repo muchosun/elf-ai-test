@@ -1,8 +1,8 @@
 import './preland-motion.js?v=20261015-hero';
 import {selectedOffer} from './services/mavs-checkout/lib/offers.js?v=20261012-2';
 const query = new URLSearchParams(location.search);
-const record = (name, properties = {}) => {
-  window.ElfTracking?.event(name,properties);
+const record = (name, properties = {}, onComplete) => {
+  window.ElfTracking?.event(name,properties,onComplete);
   try {
     const events = JSON.parse(localStorage.getItem('elf.events') || '[]');
     events.push({name, properties, path: 'preland', timestamp: new Date().toISOString(), utm: Object.fromEntries([...query].filter(([key]) => key.startsWith('utm_')))});
@@ -38,13 +38,17 @@ document.addEventListener('click',event=>{
   if(url.origin!==location.origin||!url.pathname.endsWith('/index.html')||!['#signup','#login'].includes(url.hash))return;
   event.preventDefault();event.stopImmediatePropagation();
   const destination=url.hash.slice(1);
-  record('preland_cta',{destination,period,...choice});
   try{
     const preferences=JSON.parse(localStorage.getItem('elf.preferences')||'{}');
     Object.assign(preferences,{plan:period==='yearly'?'annual':'monthly',tier:choice.tier,creditLevel:choice.level});
     localStorage.setItem('elf.preferences',JSON.stringify(preferences));
   }catch{}
-  location.assign('./index.html'+location.search+url.hash);
+  const target='./index.html'+location.search+url.hash;
+  let navigated=false;
+  const proceed=()=>{if(navigated)return;navigated=true;location.assign(target)};
+  // Let the analytics tag dispatch the CTA hit before unloading; never block checkout on it.
+  const fallback=setTimeout(proceed,2500);
+  record('preland_cta',{destination,period,...choice},()=>{clearTimeout(fallback);proceed()});
 },true);
 function toggleFAQ(button) {
   const answer = document.getElementById(button.getAttribute('aria-controls'));

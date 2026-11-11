@@ -37,3 +37,6 @@ qa.window.ElfTracking.event('qa_form_started',{order_amount:312});assert.equal(e
 qa.window.ElfTracking.event('qa_payment_simulated',{order_amount:Infinity});assert.equal(events.at(-1)[2].order_amount,undefined);
 qa.handlers['elf:analytics']({detail:{name:'screen_view',properties:{screen:'paywall'}}});assert.equal(events.at(-1)[1],'paywall_view');
 console.log('PASS: intent amount is finite and final-stage-only; paywall has an explicit funnel event');
+
+let completed=0;qa.window.ElfTracking.event('preland_cta',{outcome:'signup'},()=>completed++);assert.equal(completed,1);events.at(-1)[2].event_callback();assert.equal(completed,1);assert.equal(JSON.parse(values.get('elf.ga.pending.v1')).length,0);
+console.log('PASS: navigation callback runs once, is never persisted, and preserves the existing queue flow');
