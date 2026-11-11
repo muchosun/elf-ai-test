@@ -1,0 +1,47 @@
+async page=>{
+ const ctx=await page.context().browser().newContext({viewport:{width:1440,height:1000}}),p=await ctx.newPage(),errors=[],messages=[],requests=[],events=[];
+ const assert=(v,m)=>{if(!v)throw Error(m)};
+ p.on('pageerror',e=>errors.push(e.message));p.on('request',r=>requests.push({url:r.url(),body:r.postData(),frame:r.frame().url()}));
+ await p.route('https://www.googletagmanager.com/**',r=>r.fulfill({contentType:'text/javascript',body:'/* local audit: no production analytics traffic */'}));
+ await p.addInitScript(()=>{window.__qaMessages=[];addEventListener('message',e=>{if(e.data?.type?.startsWith('elf-qa'))__qaMessages.push(e.data)})});
+ const storage=()=>p.evaluate(()=>JSON.stringify({local:{...localStorage},session:{...sessionStorage},cookie:document.cookie}));
+ await p.goto('http://127.0.0.1:4186/test-checkout.html?plan=annual');
+ const f=p.frameLocator('#checkout-frame');await f.getByRole('heading',{name:'Checkout',exact:true}).waitFor();
+ await p.waitForFunction(()=>dataLayer.some(x=>x[1]==='qa_checkout_opened'));
+ assert(await f.locator('#price').innerText()==='$72.00','wrong price');
+ assert(await f.locator('.notice').isVisible(),'missing disclosure');assert(await f.locator('#email').count()===0,'email field remains');
+ const isolated=await p.evaluate(()=>document.querySelector('iframe').contentDocument===null);assert(isolated,'parent can read input DOM');
+ await p.screenshot({path:'output/playwright/test-checkout/desktop.png',fullPage:true});
+ await f.getByRole('button',{name:'Test Terms of Service',exact:true}).click();assert(await f.getByRole('dialog').isVisible(),'Terms do not open');await f.getByRole('button',{name:'Close',exact:true}).click();
+ await f.getByRole('button',{name:'Privacy Notice',exact:true}).click();assert(await f.getByRole('dialog').isVisible(),'Privacy does not open');await p.keyboard.press('Escape');assert(!await f.getByRole('dialog').isVisible(),'Escape does not close dialog');
+ const before=await storage();
+ await f.getByLabel('Card number',{exact:true}).fill('4242424242424242');await f.getByLabel('Expiry date').fill('12/30');await f.getByLabel('Security code',{exact:true}).fill('123');
+ await p.waitForFunction(()=>dataLayer.some(x=>x[1]==='qa_form_started'));
+ await f.getByRole('button',{name:'Submit',exact:true}).click();await f.locator('#error').waitFor({state:'visible'});
+ assert(await f.locator('#number').inputValue()==='','rejected data retained');
+ const storageState=JSON.parse(await storage());assert(!JSON.stringify(storageState).includes('4242424242424242'),'fields in storage');
+ const blocked=await p.frames().find(frame=>frame.url().includes('/frame.html')).evaluate(async()=>{let noStorage=false;try{localStorage.setItem('probe','x')}catch{noStorage=true}try{await fetch('https://example.invalid/qa-probe');return false}catch{return noStorage}});assert(blocked,'sandbox or CSP failed');
+ // Fake events from the top window and messages with extra data must be ignored.
+ const beforeSpoof=await p.evaluate(()=>dataLayer.filter(x=>x[0]==='event').length);
+ await p.evaluate(()=>postMessage({type:'elf-qa-checkout',stage:'completed'},'*'));await p.waitForTimeout(100);assert(!p.url().includes('result'),'spoofed completion');
+ await p.setViewportSize({width:390,height:844});await p.waitForTimeout(250);
+ assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'host overflow');
+ assert(await p.frames().find(frame=>frame.url().includes('/frame.html')).evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'form overflow');
+ await f.getByLabel('Name on card').fill('Alex Example');
+ await f.getByLabel('Card number',{exact:true}).fill('5555 5555 5555 4444');await f.getByLabel('Expiry date').fill('12/30');await f.getByLabel('Security code',{exact:true}).fill('123');
+ await p.screenshot({path:'output/playwright/test-checkout/mobile.png',fullPage:true});
+ messages.push(...await p.evaluate(()=>__qaMessages));
+ events.push(...await p.evaluate(()=>dataLayer.filter(x=>x[0]==='event').map(x=>({name:x[1],props:JSON.parse(JSON.stringify(x[2]))}))));
+ await f.getByRole('button',{name:'Submit',exact:true}).click();await p.waitForURL('**/test-checkout-result.html?plan=annual');await p.waitForFunction(()=>window.dataLayer?.some(x=>x[1]==='checkout_form_completed'));
+ events.push(...await p.evaluate(()=>dataLayer.filter(x=>x[0]==='event').map(x=>({name:x[1],props:JSON.parse(JSON.stringify(x[2]))}))));
+ const distinct=[...new Map(events.map(x=>[x.props.event_id,x])).values()];assert(distinct.map(x=>x.name).join(',')==='qa_checkout_opened,qa_form_started,qa_validation_failed,qa_form_filled,checkout_form_completed','wrong events');
+ assert(new Set(distinct.map(x=>x.props.attempt_id)).size===1&&distinct[0].props.attempt_id,'attempt ID not correlated');
+ const resultStorage=await storage();
+ assert(!/qa@example.com|Alex Example|4242424242424242|5555555555554444|12\/30|"cvc"|card_number/.test(JSON.stringify({requests,events,messages,resultStorage})),'sensitive value leaked');
+ assert(!requests.some(r=>r.body),'unexpected request body');
+ const inputRequests=requests.filter(r=>r.frame.includes('/frame.html')&&!r.url.includes('/frame.html')&&!r.url.endsWith('test-checkout.css')&&!r.url.includes('qa-probe'));assert(!inputRequests.length,'input document generated requests');
+ await p.screenshot({path:'output/playwright/test-checkout/result.png',fullPage:true});await p.reload();await p.waitForTimeout(200);assert(await p.evaluate(()=>typeof dataLayer==='undefined'),'completion replayed');
+ await p.goto('http://127.0.0.1:4186/test-checkout.html?plan=monthly');await f.getByRole('heading',{name:'Checkout',exact:true}).waitFor();assert(await f.locator('#price').innerText()==='$9.00','monthly price');
+ await f.getByLabel('Name on card').fill('Alex Example');await f.getByLabel('Card number',{exact:true}).fill('4111111111111111');await f.getByLabel('Expiry date').fill('12/30');await f.getByLabel('Security code',{exact:true}).fill('123');await f.getByRole('button',{name:'Submit',exact:true}).click();await p.waitForURL('**/test-checkout-result.html?plan=monthly');
+ assert(!errors.length,errors.join(','));await ctx.close();return {passed:true,desktop:1440,mobile:390,inputDOMIsolated:isolated,networkAndStorageBlocked:blocked,fieldDataInAnalytics:false,replay:false,transport:'GA tag stubbed',events:distinct};
+}

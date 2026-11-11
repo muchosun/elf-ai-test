@@ -27,3 +27,7 @@ scripts/meta-pixel-audit.cjs
 
 # Campaign browser QA is local-only.
 scripts/creators-flow-audit.cjs
+
+# QA scripts and synthetic captures stay local.
+scripts/test-checkout-*.cjs
+scripts/creators-public-audit.cjs

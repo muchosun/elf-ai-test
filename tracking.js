@@ -26,6 +26,7 @@
  function event(name,props={}){
   if(!/^[a-z][a-z0-9_]{0,39}$/.test(name))return;
   const data={funnel_id:saved.funnel||'legacy'};
+  if((name.startsWith('qa_')||name==='checkout_form_completed')&&typeof props.attempt_id==='string'&&/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(props.attempt_id))data.attempt_id=props.attempt_id;
   for(const k of ['step','branch','plan','tier','value','currency','outcome','method','screen'])if(['string','number','boolean'].includes(typeof props[k]))data[k]=typeof props[k]==='string'?props[k].slice(0,100):props[k];
   queue.push({id:Date.now().toString(36)+'-'+Math.random().toString(36).slice(2),name,data:{...data,page_location:locationForAnalytics()}});queue=queue.slice(-80);saveQueue();flush();
  }

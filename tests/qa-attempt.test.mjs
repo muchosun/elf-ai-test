@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import {createAttempt,finishAttempt,consumeAttempt} from '../test-checkout/attempt.js';
+const values=new Map(),storage={setItem:(k,v)=>values.set(k,v),getItem:k=>values.get(k)};
+const id='b54fa9bf-93a8-43de-b7e3-7a399a5f6ae4';
+createAttempt(storage,'annual',id,1000);
+assert.equal(consumeAttempt(storage,'annual',1001),null);
+finishAttempt(storage,'unmatched');assert.equal(consumeAttempt(storage,'annual',1001),null);
+finishAttempt(storage,id);assert.equal(consumeAttempt(storage,'monthly',1001),null);
+assert.equal(consumeAttempt(storage,'annual',1001).id,id);
+assert.equal(consumeAttempt(storage,'annual',1001),null);
+createAttempt(storage,'annual',id,1000);finishAttempt(storage,id);
+assert.equal(consumeAttempt(storage,'annual',2000000),null);
+createAttempt(storage,'annual',id,1000);finishAttempt(storage,id);assert.equal(consumeAttempt(storage,'annual',999),null);
+const blocked={setItem(){throw Error('blocked')},getItem(){throw Error('blocked')}};
+assert.equal(createAttempt(blocked,'annual',id).id,id);assert.doesNotThrow(()=>finishAttempt(blocked,id));assert.equal(consumeAttempt(blocked,'annual'),null);
+assert.ok(!JSON.stringify([...values]).includes('@'));
+console.log('PASS: QA attempt correlation, matching plan, single consumption, expiry and blocked storage fail safely');

@@ -1,5 +1,6 @@
 import {cp,copyFile,mkdir,readFile,writeFile} from 'node:fs/promises';
 import {build} from 'vite';
+await import('./build-test-checkout.mjs');
 const localMedia=process.argv.includes('--local-media');
 await build(localMedia?{define:{'import.meta.env.VITE_ELF_MEDIA_ORIGIN':JSON.stringify('./')}}:{});
 await cp('assets','dist/assets',{recursive:true,filter:path=>localMedia || ! /\.(mp4|webm|mov|jpg|jpeg|png|webp|avif|gif)$/i.test(path)});
@@ -13,3 +14,7 @@ if(localMedia){
 }
 
 await cp('campaign','dist/campaign',{recursive:true});
+
+for(const f of ['test-checkout.html','test-checkout-result.html','test-checkout.css'])await copyFile(f,'dist/'+f);
+await mkdir('dist/test-checkout',{recursive:true});
+for(const f of ['result.js','host.js','frame.html','attempt.js'])await copyFile('test-checkout/'+f,'dist/test-checkout/'+f);

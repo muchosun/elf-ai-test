@@ -26,3 +26,8 @@ boot('https://elf.pink/index.html#paywall');
 assert.equal(events.filter(e=>e[1]==='funnel_step_view').length,oldCount+1);
 assert.equal(JSON.parse(values.get('elf.ga.pending.v1')).length,0);
 console.log('PASS: queued GA event survives page handoff before tag loads and clears after callback');
+const qa=boot('https://elf.pink/test-checkout.html','creators-101');
+qa.window.ElfTracking.event('qa_form_filled',{attempt_id:'b54fa9bf-93a8-43de-b7e3-7a399a5f6ae4',email:'not-for-analytics@example.com',card_number:'4111111111111111'});
+assert.equal(events.at(-1)[2].attempt_id,'b54fa9bf-93a8-43de-b7e3-7a399a5f6ae4');assert.ok(!JSON.stringify(events.at(-1)).includes('not-for-analytics'));assert.ok(!JSON.stringify(events.at(-1)).includes('4111111111111111'));
+qa.window.ElfTracking.event('qa_form_filled',{attempt_id:'not-for-analytics@example.com'});assert.equal(events.at(-1)[2].attempt_id,undefined);
+console.log('PASS: only UUID attempt IDs accepted for QA events; field values and email excluded');
