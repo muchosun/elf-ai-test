@@ -18,43 +18,6 @@
         }
       },
       {
-        "name": "Стартовый экран",
-        "isDirectlyFollowedBy": false,
-        "filterExpression": {
-          "funnelEventFilter": {
-            "eventName": "funnel_step_view",
-            "funnelParameterFilterExpression": {
-              "funnelParameterFilter": {
-                "eventParameterName": "step",
-                "stringFilter": {
-                  "matchType": "EXACT",
-                  "value": "welcome",
-                  "caseSensitive": true
-                }
-              }
-            }
-          }
-        }
-      },
-      {
-        "name": "Начал анкету",
-        "isDirectlyFollowedBy": false,
-        "filterExpression": {
-          "funnelEventFilter": {
-            "eventName": "quiz_start"
-          }
-        }
-      },
-      {
-        "name": "Завершил анкету",
-        "isDirectlyFollowedBy": false,
-        "filterExpression": {
-          "funnelEventFilter": {
-            "eventName": "quiz_complete"
-          }
-        }
-      },
-      {
         "name": "Зарегистрировался",
         "isDirectlyFollowedBy": false,
         "filterExpression": {

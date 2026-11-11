@@ -10,7 +10,7 @@ Request templates in `analytics/` are prepared, not saved GA4 Explorations. The 
 
 Welcome (`funnel_step_view`, step=welcome) → `quiz_start` → `quiz_complete` → `sign_up` → `paywall_view` → `qa_checkout_opened` → `qa_form_started` → `qa_form_filled` → `qa_payment_simulated`.
 
-`quiz_complete` fires when the signup choice is reached, before selecting Google or email; it is stored once per locally saved quiz. `sign_up` counts first registrations; repeat login does not count. A closed new-user funnel excludes returning users who log in instead. The separate checkout funnel starts at `paywall_view` and includes returning users. An optional 10-step preland funnel starts at `preland_view`; do not require that step for ads landing directly on the campaign.
+`quiz_complete` fires when the signup choice is reached, before selecting Google or email; it is stored once per locally saved quiz. `sign_up` counts first registrations; repeat login does not count. A closed new-user funnel excludes returning users who log in instead. The separate checkout funnel starts at `paywall_view` and includes returning users. The separate 7-step legacy preland funnel starts at `preland_view`, then sign_up and the checkout path. Its CTA currently opens the app signup directly, bypassing the campaign quiz. Do not splice the quiz steps into that legacy journey or require preland for ads landing directly on the campaign.
 
 Use indirect following, closed funnel, full calendar dates, hostName=elf.pink, exclude sessionSource=qa. Break down by device, country, source/medium and campaign separately; inspect volumes before interpreting small cells. Funnel users are ordered users, not independent event totals. Do not infer a conversion from dividing arbitrary event counts.
 
