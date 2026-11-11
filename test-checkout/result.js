@@ -7,6 +7,7 @@ const code=Object.hasOwn(checkoutPlans,url.searchParams.get('plan'))?url.searchP
 history.replaceState(null,'',location.pathname+'?plan='+encodeURIComponent(code));
 const attempt=completed?consumeAttempt(attemptStorage,code):null;
 if(attempt){
+ try{await import('../tag-manager.js')}catch{}
  await import('../tracking-config.js');
  await import('../tracking.js');
  try{await import('../meta-pixel.js')}catch{}

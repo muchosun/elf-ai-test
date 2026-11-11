@@ -61,3 +61,6 @@ Unit tests verify all14 catalog variants and arithmetic invariants. Browser QA c
 ## Full Meta funnel QA
 
 Browser stages: PageView → CompleteRegistration → InitiateCheckout → custom TestPaymentSimulated. Checkout hooks accept only safe catalog-shaped plan codes, numeric offer values and UUID attempts, ignore extra properties, and deduplicate each stage per attempt/page. Result consumption prevents refresh replay. A separate, explicitly authorized single Purchase for Meta activation may be sent in Meta Test Events after a real QA journey; it is not automatically emitted for ordinary visitors and is not bank payment proof. Full tracker verification requires the actual TrackWill entry URL.
+
+## Google Tag Manager
+`GTM-W492TPB5` loads through `tag-manager.js` on the landing, campaign, app, checkout host and consumed result only. It never loads in the isolated input frame. The supplied published container currently targets `G-3K8JP3QX9T`; existing direct GA4 `G-E1QPWQ2FDF` is retained. Keep overlapping event tags disabled in GTM to avoid duplicates in the same destination. The bootstrap sets `user_data` to null and denies advertising user data/personalization before container loading. Only existing allowlisted stage events enter the shared dataLayer; payment fields never do. Container edits require a fresh privacy and duplicate-event audit.
