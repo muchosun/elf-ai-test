@@ -28,9 +28,11 @@
   const data={funnel_id:saved.funnel||'legacy'};
   if((name.startsWith('qa_')||name==='checkout_form_completed')&&typeof props.attempt_id==='string'&&/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(props.attempt_id))data.attempt_id=props.attempt_id;
   for(const k of ['step','branch','plan','tier','value','currency','outcome','method','screen'])if(['string','number','boolean'].includes(typeof props[k]))data[k]=typeof props[k]==='string'?props[k].slice(0,100):props[k];
+  // Dedicated intent amount belongs to the final test event only; never sum stage values.
+  if(name==='qa_payment_simulated'&&Number.isFinite(props.order_amount)&&props.order_amount>0)data.order_amount=props.order_amount;
   queue.push({id:Date.now().toString(36)+'-'+Math.random().toString(36).slice(2),name,data:{...data,page_location:locationForAnalytics()}});queue=queue.slice(-80);saveQueue();flush();
  }
  w.ElfTracking=Object.freeze({event,pageLocation:locationForAnalytics,attribution:()=>({...saved}),withAttribution:href=>{const u=new URL(href,w.location.origin);for(const[k,v]of Object.entries(saved))if(allowed(k)&&clean(v))u.searchParams.set(k,v);return u.href},trackwillReady:()=>Boolean(cfg.trackwillUrl)});
  w.setTimeout?.(flush,0);
- w.addEventListener('elf:analytics',e=>{const d=e.detail||{};if(d.name==='registration_complete')event('sign_up',{method:'email'});else if(d.name!=='checkout_redirect')event(d.name,d.properties)});
+ w.addEventListener('elf:analytics',e=>{const d=e.detail||{};if(d.name==='registration_complete')event('sign_up',{method:'email'});else if(d.name!=='checkout_redirect'){event(d.name,d.properties);if(d.name==='screen_view'&&d.properties?.screen==='paywall')event('paywall_view')}});
 })(window);

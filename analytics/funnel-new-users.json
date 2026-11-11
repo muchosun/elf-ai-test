@@ -1,0 +1,137 @@
+{
+  "dateRanges": [
+    {
+      "startDate": "7daysAgo",
+      "endDate": "yesterday"
+    }
+  ],
+  "funnel": {
+    "isOpenFunnel": false,
+    "steps": [
+      {
+        "name": "Стартовый экран",
+        "isDirectlyFollowedBy": false,
+        "filterExpression": {
+          "funnelEventFilter": {
+            "eventName": "funnel_step_view",
+            "funnelParameterFilterExpression": {
+              "funnelParameterFilter": {
+                "eventParameterName": "step",
+                "stringFilter": {
+                  "matchType": "EXACT",
+                  "value": "welcome",
+                  "caseSensitive": true
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "name": "Начал анкету",
+        "isDirectlyFollowedBy": false,
+        "filterExpression": {
+          "funnelEventFilter": {
+            "eventName": "quiz_start"
+          }
+        }
+      },
+      {
+        "name": "Завершил анкету",
+        "isDirectlyFollowedBy": false,
+        "filterExpression": {
+          "funnelEventFilter": {
+            "eventName": "quiz_complete"
+          }
+        }
+      },
+      {
+        "name": "Зарегистрировался",
+        "isDirectlyFollowedBy": false,
+        "filterExpression": {
+          "funnelEventFilter": {
+            "eventName": "sign_up"
+          }
+        }
+      },
+      {
+        "name": "Увидел тарифы",
+        "isDirectlyFollowedBy": false,
+        "filterExpression": {
+          "funnelEventFilter": {
+            "eventName": "paywall_view"
+          }
+        }
+      },
+      {
+        "name": "Открыл checkout",
+        "isDirectlyFollowedBy": false,
+        "filterExpression": {
+          "funnelEventFilter": {
+            "eventName": "qa_checkout_opened"
+          }
+        }
+      },
+      {
+        "name": "Начал заполнять",
+        "isDirectlyFollowedBy": false,
+        "filterExpression": {
+          "funnelEventFilter": {
+            "eventName": "qa_form_started"
+          }
+        }
+      },
+      {
+        "name": "Заполнил форму",
+        "isDirectlyFollowedBy": false,
+        "filterExpression": {
+          "funnelEventFilter": {
+            "eventName": "qa_form_filled"
+          }
+        }
+      },
+      {
+        "name": "Завершил тестовый заказ",
+        "isDirectlyFollowedBy": false,
+        "filterExpression": {
+          "funnelEventFilter": {
+            "eventName": "qa_payment_simulated"
+          }
+        }
+      }
+    ]
+  },
+  "dimensionFilter": {
+    "andGroup": {
+      "expressions": [
+        {
+          "filter": {
+            "fieldName": "hostName",
+            "stringFilter": {
+              "matchType": "EXACT",
+              "value": "elf.pink"
+            }
+          }
+        },
+        {
+          "notExpression": {
+            "filter": {
+              "fieldName": "sessionSource",
+              "stringFilter": {
+                "matchType": "EXACT",
+                "value": "qa"
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "funnelBreakdown": {
+    "breakdownDimension": {
+      "name": "deviceCategory"
+    },
+    "limit": "5"
+  },
+  "returnPropertyQuota": true
+}

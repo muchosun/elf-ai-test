@@ -13,9 +13,10 @@ const notice=t=>{document.querySelector('.campaign-notice')?.remove();const n=do
 function branch(){return definition.branches.find(b=>b.characterType===state.type&&b.selectors.gender===state.gender)}
 function sequence(){return [{key:'welcome',custom:'welcome'},{key:'character-type',step:definition.entrySteps[1]},{key:state.type==='real'?'real-gender':'virtual-gender',step:definition.entrySteps[state.type==='real'?2:3]},...(branch()?.steps||[]).map(s=>({key:s.kind==='custom'?'story':`${state.gender}-${s.kind==='photos'?'photo':s.field.key}`,custom:s.kind==='custom'?'story':null,step:s})),{key:'signup',step:definition.signup}]}
 function save(){try{localStorage.setItem('elf.creators.v1',JSON.stringify(state))}catch{}}
-function paywall(){save();track('quiz_complete',{branch:state.type});const p=new URL('/index.html',location.origin);p.hash='paywall';p.searchParams.set('funnel','creators-101');location.assign(window.ElfTracking?.withAttribution(p.href)||p.href)}
+function completeQuiz(){if(state.quizCompleteTracked)return;state.quizCompleteTracked=true;save();track('quiz_complete',{branch:state.type})}
+function paywall(){save();completeQuiz();const p=new URL('/index.html',location.origin);p.hash='paywall';p.searchParams.set('funnel','creators-101');location.assign(window.ElfTracking?.withAttribution(p.href)||p.href)}
 function setPosition(n){state.position=Math.max(0,Math.min(n,sequence().length-1));save();history.replaceState(null,'',location.pathname+location.search+'#'+(sequence()[state.position].key==='signup'?'signup':state.position));render()}
-function advance(){setPosition(state.position+1)}
+function advance(){if(state.position===0)track('quiz_start',{branch:'entry'});setPosition(state.position+1)}
 function goBack(){setPosition(state.position-1)}
 function mountCustom(key){frame=document.createElement('iframe');frame.className='campaign-frame';frame.title=key==='welcome'?'Welcome to Elf':'Photo introduction';frame.sandbox='allow-scripts';frame.src='/campaign/'+key+'.html';root.replaceChildren(frame)}
 window.addEventListener('message',e=>{if(!frame||e.source!==frame.contentWindow||e.data?.type!=='funnel-step:loaded')return;port?.close();const channel=new MessageChannel();port=channel.port1;port.onmessage=m=>{if(m.data?.type==='complete')advance();if(m.data?.type==='back')goBack();if(m.data?.type==='track')track('quiz_animation',{step:sequence()[state.position].key})};port.start();frame.contentWindow.postMessage({type:'funnel-step:init',init:{context:custom[sequence()[state.position].custom],saved:null,theme:'dark',preview:false}},'*',[channel.port2])});
@@ -62,6 +63,7 @@ function photoStep(step){
  [...root.querySelectorAll('button')].find(b=>b.textContent.trim()==='Example')?.addEventListener('click',()=>{const overlay=document.createElement('div');overlay.className='campaign-example';overlay.setAttribute('role','dialog');overlay.setAttribute('aria-label','Photo example');const image=new Image();image.src=step.field.props.exampleUrl;image.alt='Photo example';const close=document.createElement('button');close.textContent='Close';close.onclick=()=>overlay.remove();overlay.append(image,close);overlay.addEventListener('click',e=>{if(e.target===overlay)overlay.remove()});overlay.addEventListener('keydown',e=>{if(e.key==='Escape')overlay.remove()});document.body.append(overlay);close.focus()});
 }
 function signupStep(){
+ completeQuiz();
  history.replaceState(null,'',location.pathname+location.search+'#signup');
  const buttons=[...root.querySelectorAll('button')];
  buttons.find(b=>b.textContent.trim()==='Continue with Apple')?.remove();

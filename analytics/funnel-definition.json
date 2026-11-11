@@ -1,0 +1,61 @@
+{
+  "status": "prepared_not_saved_in_GA4_access_missing",
+  "measurementId": "G-3K8JP3QX9T",
+  "gtmId": "GTM-W492TPB5",
+  "steps": [
+    {
+      "label": "Стартовый экран",
+      "event": "funnel_step_view",
+      "step": "welcome"
+    },
+    {
+      "label": "Начал анкету",
+      "event": "quiz_start",
+      "step": null
+    },
+    {
+      "label": "Завершил анкету",
+      "event": "quiz_complete",
+      "step": null
+    },
+    {
+      "label": "Зарегистрировался",
+      "event": "sign_up",
+      "step": null
+    },
+    {
+      "label": "Увидел тарифы",
+      "event": "paywall_view",
+      "step": null
+    },
+    {
+      "label": "Открыл checkout",
+      "event": "qa_checkout_opened",
+      "step": null
+    },
+    {
+      "label": "Начал заполнять",
+      "event": "qa_form_started",
+      "step": null
+    },
+    {
+      "label": "Заполнил форму",
+      "event": "qa_form_filled",
+      "step": null
+    },
+    {
+      "label": "Завершил тестовый заказ",
+      "event": "qa_payment_simulated",
+      "step": null
+    }
+  ],
+  "metric": {
+    "parameterName": "order_amount",
+    "displayName": "Test order amount",
+    "description": "Final selected order amount for qa_payment_simulated only. Test intent, not real revenue. Currency USD.",
+    "measurementUnit": "CURRENCY",
+    "scope": "EVENT"
+  },
+  "propertyId": null,
+  "productionMetrics": null
+}

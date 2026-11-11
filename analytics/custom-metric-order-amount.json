@@ -1,0 +1,7 @@
+{
+  "parameterName": "order_amount",
+  "displayName": "Test order amount",
+  "description": "Final selected order amount for qa_payment_simulated only. Test intent, not real revenue. Currency USD.",
+  "measurementUnit": "CURRENCY",
+  "scope": "EVENT"
+}

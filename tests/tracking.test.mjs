@@ -31,3 +31,9 @@ qa.window.ElfTracking.event('qa_form_filled',{attempt_id:'b54fa9bf-93a8-43de-b7e
 assert.equal(events.at(-1)[2].attempt_id,'b54fa9bf-93a8-43de-b7e3-7a399a5f6ae4');assert.ok(!JSON.stringify(events.at(-1)).includes('not-for-analytics'));assert.ok(!JSON.stringify(events.at(-1)).includes('4111111111111111'));
 qa.window.ElfTracking.event('qa_form_filled',{attempt_id:'not-for-analytics@example.com'});assert.equal(events.at(-1)[2].attempt_id,undefined);
 console.log('PASS: only UUID attempt IDs accepted for QA events; field values and email excluded');
+
+qa.window.ElfTracking.event('qa_payment_simulated',{order_amount:312,value:312,currency:'USD',plan:'creator_350_annual'});assert.equal(events.at(-1)[2].order_amount,312);assert.equal(events.at(-1)[2].value,312);
+qa.window.ElfTracking.event('qa_form_started',{order_amount:312});assert.equal(events.at(-1)[2].order_amount,undefined);
+qa.window.ElfTracking.event('qa_payment_simulated',{order_amount:Infinity});assert.equal(events.at(-1)[2].order_amount,undefined);
+qa.handlers['elf:analytics']({detail:{name:'screen_view',properties:{screen:'paywall'}}});assert.equal(events.at(-1)[1],'paywall_view');
+console.log('PASS: intent amount is finite and final-stage-only; paywall has an explicit funnel event');

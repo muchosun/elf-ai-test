@@ -1,0 +1,32 @@
+[
+  {
+    "parameterName": "funnel_id",
+    "displayName": "Funnel ID",
+    "scope": "EVENT"
+  },
+  {
+    "parameterName": "step",
+    "displayName": "Funnel step",
+    "scope": "EVENT"
+  },
+  {
+    "parameterName": "branch",
+    "displayName": "Character branch",
+    "scope": "EVENT"
+  },
+  {
+    "parameterName": "plan",
+    "displayName": "Selected plan",
+    "scope": "EVENT"
+  },
+  {
+    "parameterName": "method",
+    "displayName": "Registration method",
+    "scope": "EVENT"
+  },
+  {
+    "parameterName": "outcome",
+    "displayName": "Test outcome",
+    "scope": "EVENT"
+  }
+]

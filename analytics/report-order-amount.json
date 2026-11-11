@@ -1,0 +1,68 @@
+{
+  "dateRanges": [
+    {
+      "startDate": "7daysAgo",
+      "endDate": "yesterday"
+    }
+  ],
+  "dimensions": [
+    {
+      "name": "date"
+    },
+    {
+      "name": "customEvent:plan"
+    },
+    {
+      "name": "sessionSourceMedium"
+    },
+    {
+      "name": "sessionCampaignName"
+    }
+  ],
+  "metrics": [
+    {
+      "name": "totalUsers"
+    },
+    {
+      "name": "eventCount"
+    },
+    {
+      "name": "customEvent:order_amount"
+    }
+  ],
+  "dimensionFilter": {
+    "andGroup": {
+      "expressions": [
+        {
+          "filter": {
+            "fieldName": "hostName",
+            "stringFilter": {
+              "matchType": "EXACT",
+              "value": "elf.pink"
+            }
+          }
+        },
+        {
+          "notExpression": {
+            "filter": {
+              "fieldName": "sessionSource",
+              "stringFilter": {
+                "matchType": "EXACT",
+                "value": "qa"
+              }
+            }
+          }
+        },
+        {
+          "filter": {
+            "fieldName": "eventName",
+            "stringFilter": {
+              "matchType": "EXACT",
+              "value": "qa_payment_simulated"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
