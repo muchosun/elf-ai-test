@@ -44,8 +44,9 @@
  document.querySelector('#legal-close').addEventListener('click',()=>dialog.close());
  document.querySelector('#back').addEventListener('click',()=>{form.reset();send('back')});
  window.addEventListener('pagehide',()=>form.reset());
- window.addEventListener('pageshow',()=>form.reset());
+ window.addEventListener('pageshow',event=>{if(event.persisted)form.reset()});
  const resize=()=>parent.postMessage({type:'elf-qa-size',height:Math.ceil(document.querySelector('main').getBoundingClientRect().bottom+32)},'*');
  new ResizeObserver(resize).observe(document.body);window.addEventListener('resize',resize);
+ document.querySelector('#payment-fields').disabled=false;form.removeAttribute('aria-busy');
  send('opened');resize();
 })();

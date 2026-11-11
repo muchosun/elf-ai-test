@@ -4,7 +4,7 @@ async page=>{
  p.on('pageerror',e=>errors.push(e.message));p.on('request',r=>network.push(r.url()+' '+(r.postData()||'')));
  await p.route('https://www.googletagmanager.com/**',r=>r.fulfill({contentType:'text/javascript',body:'/* privacy QA: transport disabled */'}));
  await p.addInitScript(()=>{window.__messages=[];addEventListener('message',e=>{if(e.data?.type?.startsWith('elf-qa'))__messages.push(e.data)})});
- await p.goto('http://127.0.0.1:4186/test-checkout.html');const f=p.frameLocator('#checkout-frame'),n=f.getByLabel('Card number',{exact:true}),expiry=f.getByLabel('Expiry date'),cvc=f.getByLabel('Security code');await n.waitFor();
+ await p.goto('http://127.0.0.1:4186/test-checkout.html');const f=p.frameLocator('#checkout-frame'),n=f.getByLabel('Card number',{exact:true}),expiry=f.getByLabel('Expiry date'),cvc=f.getByLabel('Security code');await n.waitFor();await p.waitForFunction(()=>{const frame=document.querySelector('iframe');return frame?.contentWindow!==null&&window.dataLayer?.some(x=>x[1]==='qa_checkout_opened')});
  await n.pressSequentially('4111111111111111');assert(await n.inputValue()==='4111 1111 1111 1111','Typing not grouped');assert(await f.locator('#brand-status').innerText()==='Visa','Visa missing');assert(await f.locator('#detected-brand .visa-mark').count()===1,'Visa logo missing');
  await n.evaluate(el=>el.setSelectionRange(5,5));await n.press('Backspace');assert(await n.inputValue()==='4111 1111 1111 111','Backspace across space failed');
  await n.fill('4111111111111111');await n.evaluate(el=>el.setSelectionRange(4,4));await n.press('Delete');assert((await n.inputValue()).replace(/\D/g,'').length===15,'Forward Delete across space failed');

@@ -9,3 +9,4 @@
 /* Input formatting and detected card brand are local to the sandbox. */
 .number-field input{padding-right:62px}.detected-brand{position:absolute;right:16px;top:14px;width:33px;height:22px;display:flex;align-items:center;justify-content:center;pointer-events:none}.detected-brand:empty{display:none}.detected-brand svg{width:30px;height:22px}.detected-brand .visa-mark{fill:#244cb1}.brand-inactive{opacity:.35}.mavs-style .field-error{color:#a82c40;font-size:12px;line-height:1.4;margin:-10px 12px 16px}.mavs-style input[aria-invalid=true]{border-color:#bd3550}.number-field input{font-variant-numeric:tabular-nums}
 .checkout-frame-root{background:#f5f5f7}
+#payment-fields{border:0;padding:0;margin:0;min-width:0}#payment-fields:disabled{opacity:.6}
