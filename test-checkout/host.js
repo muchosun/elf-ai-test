@@ -6,7 +6,8 @@ const code=Object.hasOwn(checkoutPlans,raw)?raw:'annual';
 // Never forward arbitrary query strings to the input document or analytics.
 history.replaceState(null,'',location.pathname+'?plan='+encodeURIComponent(code));
 try{await import('../tag-manager.js')}catch{}
-await import('../tracking-config.js');await import('../tracking.js');try{await import('../meta-pixel.js')}catch{}
+await import('../tracking-config.js');try{await import('../trackwill-client.js')}catch{}
+ await import('../tracking.js');try{await import('../meta-pixel.js')}catch{}
 window.dataLayer=window.dataLayer||[];window.gtag=function(){window.dataLayer.push(arguments)};
 window.gtag('js',new Date());window.gtag('config',window.ELF_TRACKING_CONFIG.ga4Id,{
  send_page_view:false,ignore_referrer:true,page_location:location.origin+location.pathname,

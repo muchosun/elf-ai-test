@@ -25,6 +25,8 @@
  }
  function event(name,props={},options={}){
   if(!/^[a-z][a-z0-9_]{0,39}$/.test(name))return;
+  // Registration and the consumed test result are the only postback triggers.
+  if(name==='sign_up'||name==='qa_payment_simulated'){try{w.ElfTrackwill?.enqueue(name,saved,props)}catch{}}
   const data={funnel_id:saved.funnel||'legacy'};
   if(typeof saved.sub5==='string'&&/^[a-z][a-z0-9_-]{7,79}$/i.test(saved.sub5))data.trackwill_sub5=saved.sub5;
   if(typeof saved.source_id==='string'&&/^[a-z][a-z0-9_-]{1,31}$/i.test(saved.source_id))data.source_id=saved.source_id;

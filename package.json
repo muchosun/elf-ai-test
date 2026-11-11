@@ -8,7 +8,7 @@
     "build": "node scripts/build.mjs",
     "build:local": "node scripts/build.mjs --local-media",
     "preview": "vite preview --host 127.0.0.1",
-    "test": "node tests/auth.test.mjs && node tests/checkout-client.test.mjs && node tests/checkout-return.test.mjs && node tests/social-auth.test.mjs && node tests/google-registration.test.mjs && node tests/lazy-video.test.mjs && node tests/meta-pixel.test.mjs && node tests/tracking.test.mjs && node tests/qa-attempt.test.mjs && node tests/card-input.test.mjs && node tests/order-summary.test.mjs"
+    "test": "node tests/auth.test.mjs && node tests/checkout-client.test.mjs && node tests/checkout-return.test.mjs && node tests/social-auth.test.mjs && node tests/google-registration.test.mjs && node tests/lazy-video.test.mjs && node tests/meta-pixel.test.mjs && node tests/tracking.test.mjs && node tests/qa-attempt.test.mjs && node tests/card-input.test.mjs && node tests/order-summary.test.mjs && node tests/trackwill-postback.test.mjs && node tests/trackwill-client.test.mjs"
   },
   "devDependencies": {
     "lucide-static": "^0.468.0",

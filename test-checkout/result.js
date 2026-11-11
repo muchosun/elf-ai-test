@@ -9,6 +9,7 @@ const attempt=completed?consumeAttempt(attemptStorage,code):null;
 if(attempt){
  try{await import('../tag-manager.js')}catch{}
  await import('../tracking-config.js');
+ try{await import('../trackwill-client.js')}catch{}
  await import('../tracking.js');
  try{await import('../meta-pixel.js')}catch{}
  window.dataLayer=window.dataLayer||[];window.gtag=function(){window.dataLayer.push(arguments)};
