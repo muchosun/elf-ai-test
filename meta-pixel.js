@@ -42,6 +42,7 @@
       } catch { return; }
       // A callback URL is not proof of payment. Never emit Purchase here.
       send('trackSingleCustom', outcome === 'success' ? 'SandboxCheckoutReturn' : 'CheckoutFailedReturn', {sandbox: true, payment_verified: false, checkout_outcome: outcome});
+      return outcome;
     }
   });
 })(window, document);

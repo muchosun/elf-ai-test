@@ -24,3 +24,6 @@ tests/
 scripts/*-capture.cjs
 scripts/submit-sandbox-payment.cjs
 scripts/meta-pixel-audit.cjs
+
+# Campaign browser QA is local-only.
+scripts/creators-flow-audit.cjs

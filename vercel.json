@@ -15,6 +15,10 @@
   },
   "rewrites": [
     {
+      "source": "/f/campaign/creators-101",
+      "destination": "/creators.html"
+    },
+    {
       "source": "/api/auth/:authpath*",
       "destination": "/api/auth?authpath=:authpath*"
     }

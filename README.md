@@ -131,3 +131,7 @@ Hero uses `27f7409ecc6b255a-faststart.mp4` from source commit `44514de2cd4ab91f2
 Секрет Events Manager / Conversions API для браузерного Pixel не нужен и в код не добавлен. Email, пароль, фото и данные карты не передаются в параметрах событий. Автоматическое распознавание форм отключено; используются явные вызовы событий. Сам Pixel получает обычные браузерные данные и адрес страницы.
 
 Проверки: `npm test` и `scripts/meta-pixel-audit.cjs` через Playwright CLI. Браузерный прогон подменяет SDK транспортом с перехватом: проверяет вызовы и параметры, не отправляя тестовые конверсии в Meta. Это не подтверждение получения событий в Events Manager. Результаты: `output/playwright/meta-pixel-20261022/results.json`. Публикация в рамках этого изменения не выполнялась.
+
+## Creators 101 — 11 November 2026
+
+New entry: `/f/campaign/creators-101`. See [campaign integration](docs/creators-101.md) for source capture, Google return, GA4 and pending TrackWill configuration. The older prelanding remains available.

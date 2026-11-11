@@ -2,6 +2,7 @@ import './preland-motion.js?v=20261015-hero';
 import {selectedOffer} from './services/mavs-checkout/lib/offers.js?v=20261012-2';
 const query = new URLSearchParams(location.search);
 const record = (name, properties = {}) => {
+  window.ElfTracking?.event(name,properties);
   try {
     const events = JSON.parse(localStorage.getItem('elf.events') || '[]');
     events.push({name, properties, path: 'preland', timestamp: new Date().toISOString(), utm: Object.fromEntries([...query].filter(([key]) => key.startsWith('utm_')))});
