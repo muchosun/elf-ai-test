@@ -16,7 +16,7 @@
  form.addEventListener('submit',event=>{
   event.preventDefault();if(completed)return;reportFilled();
   const valid=/^[a-z][a-z '-]{0,38}\s[a-z][a-z '-]{0,38}$/i.test(holder.value.trim()) && ['number','expiry','cvc'].every((id,i)=>fixtures[i].includes(document.getElementById(id).value.replace(/\s/g,'')));
-  if(!valid){send('invalid');error.textContent='Use a fictional name and the sample card details.';form.reset();inputs[0].focus();return;}
+  if(!valid){send('invalid');error.textContent='This test accepts only designated QA card details and a fictional name.';form.reset();inputs[0].focus();return;}
   completed=true;form.reset();inputs.forEach(input=>input.value='');send('completed');
  });
  const dialog=document.querySelector('#legal-dialog');

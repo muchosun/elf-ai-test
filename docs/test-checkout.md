@@ -4,7 +4,7 @@ Default checkout on Elf now opens `/test-checkout.html?plan=annual` (or another 
 
 ## Screen
 
-Based on the saved MAVS screen: `outputs/creators-101-20261111/public-checkout.png`. Light background, white rounded fields, Name on card → Card number → Expiry date / Security code, pink Submit, inline Visa/Mastercard marks, language row and working legal dialogs. Desktop uses summary/form columns; mobile stacks them. A visible notice before the fields says this is a test and asks for synthetic details. The sample helper is expandable; use a fictional name (Alex Example), displayed Visa or Mastercard fixture, expiry12/30, CVC123. Real card verification is not attempted. Result says no payment was made. No Purchase or fake bank decline is emitted.
+Based on the saved MAVS screen: `outputs/creators-101-20261111/public-checkout.png`. Light background, white rounded fields, Name on card → Card number → Expiry date / Security code, pink Submit, inline Visa/Mastercard marks, language row and working legal dialogs. Desktop uses summary/form columns; mobile stacks them. A visible notice before the fields says this is a test and asks for synthetic details. The sample helper is not shown on the checkout. For QA use a fictional name (Alex Example), Visa4111111111111111 or Mastercard5555555555554444, expiry12/30, CVC123. Real card verification is not attempted. Result says no payment was made. No Purchase or fake bank decline is emitted.
 
 ## Measurement in Google Analytics
 
