@@ -14,6 +14,8 @@ Welcome (`funnel_step_view`, step=welcome) → `quiz_start` → `quiz_complete` 
 
 Use indirect following, closed funnel, full calendar dates, hostName=elf.pink, exclude sessionSource=qa. Break down by device, country, source/medium and campaign separately; inspect volumes before interpreting small cells. Funnel users are ordered users, not independent event totals. Do not infer a conversion from dividing arbitrary event counts.
 
+The legacy `preland_cta` is queued before navigation and dispatched on the destination page with its original page_location. No waiting callback or arbitrary redirect delay is required. This records the CTA handoff when the destination loads; an unavailable destination will leave it pending.
+
 ## Final amount
 
 On `qa_payment_simulated`, numeric `value` and `order_amount` equal the full catalog amount due now, with `currency=USD`, full `plan` code and safe attempt UUID. Starter annual is 72 (not its monthly equivalent 6); monthly is 9; Creator annual is 312. No cardholder or input values are read for these fields.
