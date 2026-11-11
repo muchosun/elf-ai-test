@@ -4,7 +4,7 @@ Default checkout on Elf now opens `/test-checkout.html?plan=annual` (or another 
 
 ## Screen
 
-Based on the saved MAVS screen: `outputs/creators-101-20261111/public-checkout.png`. Light background, white rounded fields, Name on card → Card number → Expiry date / Security code, pink Submit, inline Visa/Mastercard marks, language row and working legal dialogs. Desktop uses summary/form columns; mobile stacks them. A visible notice before the fields says this is a test and asks for synthetic details. The sample helper is not shown on the checkout. For QA use a fictional name (Alex Example), Visa4111111111111111 or Mastercard5555555555554444, expiry12/30, CVC123. Real card verification is not attempted. Result says no payment was made. No Purchase or fake bank decline is emitted.
+Based on the saved MAVS screen: `outputs/creators-101-20261111/public-checkout.png`. Light background, white rounded fields, Name on card → Card number → Expiry date / Security code, pink Submit, inline Visa/Mastercard marks, language row and working legal dialogs. Desktop uses summary/form columns; mobile stacks them. A visible notice before the fields says this is a test and asks for synthetic details. The sample helper is not shown on the checkout. For QA use a fictional name (Alex Example), Visa4111111111111111 or Mastercard5555555555554444, expiry12/30, CVC123. Other synthetic Visa/Mastercard-format numbers with a valid checksum, valid future expiry and three-digit CVC also complete the test. Real card verification is not attempted. Result thanks the user for a test payment and explicitly says no transaction was processed or charged. No Purchase or fake bank decline is emitted.
 
 ## Measurement in Google Analytics
 
@@ -15,8 +15,9 @@ Use GA4 G-E1QPWQ2FDF, Events / Realtime, or a funnel exploration with these even
 | qa_checkout_opened | Isolated form initialized |
 | qa_form_started | At least one field was edited / nonempty on submit |
 | qa_form_filled | All visible fields were nonempty at least once (not necessarily valid) |
-| qa_validation_failed | Submit did not match test fixture/fictional name rules |
-| checkout_form_completed | Valid test form submitted, fields cleared, result opened |
+| qa_validation_failed | Submit had incomplete or incorrectly formatted test fields |
+| checkout_form_completed | Valid-format test form submitted, fields cleared, result opened |
+| qa_payment_simulated | Test payment simulation completed; no bank transaction or charge |
 
 Each event includes allowlisted plan, illustrative amount, USD, outcome:test_only and random UUID attempt_id. GA's standard pseudonymous browser identifier provides browser-level user counts; account identity or cross-device matching is not implemented. A new checkout view gets a new attempt ID, so repeat visits are separate attempts. A completion must match the recent plan/attempt marked complete by the host and is consumed once. Attempt metadata expires after30min. Storage blocking fails safely; completion analytics may be absent if sessionStorage is unavailable.
 
@@ -41,6 +42,6 @@ Artifacts under `output/playwright/test-checkout/` are local-only and excluded f
 
 ## Card-entry mechanics
 
-The input document formats numbers into four-digit groups (up to19digits), strips nonnumeric pasted characters, preserves digit-based caret/selection, and supports Backspace/Delete across grouping separators. Visa and Mastercard (including2221–2720) are recognized locally by prefix; a matching logo appears in the number field and the other summary logo dims. Unknown/cleared prefixes restore the generic state. This is brand formatting, not issuer/account verification. Expiry is formatted MM / YY, CVC is numeric with3digits. Blur hints check number format/checksum, month/expiry and CVC length locally. The strict synthetic-fixture Submit rule is unchanged.
+The input document formats numbers into four-digit groups (up to19digits), strips nonnumeric pasted characters, preserves digit-based caret/selection, and supports Backspace/Delete across grouping separators. Visa and Mastercard (including2221–2720) are recognized locally by prefix; a matching logo appears in the number field and the other summary logo dims. Unknown/cleared prefixes restore the generic state. This is brand formatting, not issuer/account verification. Expiry is formatted MM / YY, CVC is numeric with3digits. Blur hints check number format/checksum, month/expiry and CVC length locally. Submit checks field format rather than a fixed fixture whitelist. This does not verify whether the number is issued or belongs to the visitor.
 
 Helpers are inlined into the existing hashed CSP script at build time; no new runtime dependencies, network calls, card-brand events or field-value messages are introduced. Unit tests cover prefix/checksum/date boundaries. `scripts/test-checkout-masks.cjs` exercises real typing, a browser paste event (no OS clipboard access), caret/selection editing, separator deletion, logo changes, desktop/mobile, local hints, privacy and QA completion.

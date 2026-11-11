@@ -34,7 +34,7 @@ async page=>{
  events.push(...await p.evaluate(()=>dataLayer.filter(x=>x[0]==='event').map(x=>({name:x[1],props:JSON.parse(JSON.stringify(x[2]))}))));
  await f.getByRole('button',{name:'Submit',exact:true}).click();await p.waitForURL('**/test-checkout-result.html?plan=annual');await p.waitForFunction(()=>window.dataLayer?.some(x=>x[1]==='checkout_form_completed'));
  events.push(...await p.evaluate(()=>dataLayer.filter(x=>x[0]==='event').map(x=>({name:x[1],props:JSON.parse(JSON.stringify(x[2]))}))));
- const distinct=[...new Map(events.map(x=>[x.props.event_id,x])).values()];assert(distinct.map(x=>x.name).join(',')==='qa_checkout_opened,qa_form_started,qa_validation_failed,qa_form_filled,checkout_form_completed','wrong events');
+ const distinct=[...new Map(events.map(x=>[x.props.event_id,x])).values()];assert(distinct.map(x=>x.name).join(',')==='qa_checkout_opened,qa_form_started,qa_validation_failed,qa_form_filled,checkout_form_completed,qa_payment_simulated','wrong events');
  assert(new Set(distinct.map(x=>x.props.attempt_id)).size===1&&distinct[0].props.attempt_id,'attempt ID not correlated');
  const resultStorage=await storage();
  assert(!/qa@example.com|Alex Example|4242424242424242|5555555555554444|12\/30|"cvc"|card_number/.test(JSON.stringify({requests,events,messages,resultStorage})),'sensitive value leaked');

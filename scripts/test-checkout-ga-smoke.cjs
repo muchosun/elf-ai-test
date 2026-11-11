@@ -5,6 +5,6 @@ async page=>{
  await p.goto('http://127.0.0.1:4186/test-checkout.html?plan=annual');const f=p.frameLocator('#checkout-frame');await f.getByRole('heading',{name:'Checkout',exact:true}).waitFor();await waitFor('qa_checkout_opened');
  await f.getByLabel('Card number',{exact:true}).fill('4111111111111111');await waitFor('qa_form_started');
  await f.getByRole('button',{name:'Submit',exact:true}).click();await waitFor('qa_validation_failed');
- await f.getByLabel('Name on card').fill('Alex Example');await f.getByLabel('Card number',{exact:true}).fill('4111111111111111');await f.getByLabel('Expiry date').fill('12/30');await f.getByLabel('Security code',{exact:true}).fill('123');await waitFor('qa_form_filled');await f.getByRole('button',{name:'Submit',exact:true}).click();await p.waitForURL('**/test-checkout-result.html?plan=annual');await waitFor('checkout_form_completed');
+ await f.getByLabel('Name on card').fill('Alex Example');await f.getByLabel('Card number',{exact:true}).fill('4111111111111111');await f.getByLabel('Expiry date').fill('12/30');await f.getByLabel('Security code',{exact:true}).fill('123');await waitFor('qa_form_filled');await f.getByRole('button',{name:'Submit',exact:true}).click();await p.waitForURL('**/test-checkout-result.html?plan=annual');await waitFor('checkout_form_completed');await waitFor('qa_payment_simulated');
  await ctx.close();return {received,debugMode:true,scope:'GA collect HTTP acknowledgement, not GA reporting UI'};
 }

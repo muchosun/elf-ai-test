@@ -10,3 +10,11 @@ assert.equal(passesLuhn('4111 1111 1111 1111'),true);assert.equal(passesLuhn('55
 assert.equal(expiryIsCurrent('12 / 30',2026,11),true);assert.equal(expiryIsCurrent('11/26',2026,11),true);assert.equal(expiryIsCurrent('10/26',2026,11),false);assert.equal(expiryIsCurrent('13/30',2026,11),false);assert.equal(expiryIsCurrent('12/3',2026,11),false);
 assert.equal(digitCaret('4111 1111',4),4);assert.equal(digitCaret('4111 1111',5),6);assert.equal(digitCaret('12 / 30',3),6);
 console.log('PASS: local card/expiry masks, brand prefix boundaries, checksum, expiry boundaries and digit-based caret');
+const {canSimulatePayment}=await import('../test-checkout/card-input.js');
+assert.equal(canSimulatePayment('Alex Example','4242 4200 0000 1230','09 / 33','456',2026,11),true);
+assert.equal(canSimulatePayment('Alex Example','5555 5555 5555 4444','09 / 33','456',2026,11),true);
+assert.equal(canSimulatePayment('Alex Example','4242420000001231','09/33','456',2026,11),false);
+assert.equal(canSimulatePayment('Alex Example','4242420000001230','10/26','456',2026,11),false);
+assert.equal(canSimulatePayment('Alex Example','4242420000001230','09/33','45',2026,11),false);
+assert.equal(canSimulatePayment('','4242420000001230','09/33','456',2026,11),false);
+console.log('PASS: generated valid-format synthetic numbers complete simulation; checksum, expiry, incomplete CVC and name errors do not');
