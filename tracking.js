@@ -1,13 +1,13 @@
 (function(w){
  if(w.ElfTracking)return;
  const cfg=w.ELF_TRACKING_CONFIG||{}, key='elf.attribution.v1';
- const allowed=k=>/^utm_[a-z0-9_]{1,32}$/.test(k)||['fbclid','gclid','ttclid','msclkid','funnel',...(cfg.clickIdParams||['clickid','click_id','subid','sub_id','twclid'])].includes(k);
+ const allowed=k=>/^utm_[a-z0-9_]{1,32}$/.test(k)||['fbclid','gclid','ttclid','msclkid','funnel','source_id','sub4',...(cfg.clickIdParams||['clickid','click_id','subid','sub_id','twclid','sub5'])].includes(k);
  const clean=v=>typeof v==='string'&&v.length<=256&&!v.includes('@')&&!/[\r\n]/.test(v);
  let saved={};try{saved=JSON.parse(w.sessionStorage.getItem(key)||'{}')}catch{}
  const url=new URL(w.location.href),fresh={};
  for(const [k,v]of url.searchParams)if(allowed(k)&&clean(v))fresh[k]=v;
  // A new advertising click starts a fresh attribution set; OAuth returns restore it.
- if(Object.keys(fresh).some(k=>k.startsWith('utm_')||['fbclid','gclid','clickid','click_id','twclid'].includes(k)))saved=fresh;
+ if(Object.keys(fresh).some(k=>k.startsWith('utm_')||(['fbclid','gclid','clickid','click_id','twclid','sub5'].includes(k)&&fresh[k]!=='')))saved=fresh;
  else saved={...saved,...fresh};
  if(w.document.documentElement.dataset.funnel)saved.funnel=w.document.documentElement.dataset.funnel;
  for(const[k,v]of Object.entries(saved))if(allowed(k)&&clean(v)&&!url.searchParams.has(k))url.searchParams.set(k,v);
@@ -26,6 +26,8 @@
  function event(name,props={},options={}){
   if(!/^[a-z][a-z0-9_]{0,39}$/.test(name))return;
   const data={funnel_id:saved.funnel||'legacy'};
+  if(typeof saved.sub5==='string'&&/^[a-z][a-z0-9_-]{7,79}$/i.test(saved.sub5))data.trackwill_sub5=saved.sub5;
+  if(typeof saved.source_id==='string'&&/^[a-z][a-z0-9_-]{1,31}$/i.test(saved.source_id))data.source_id=saved.source_id;
   if((name.startsWith('qa_')||name==='checkout_form_completed')&&typeof props.attempt_id==='string'&&/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(props.attempt_id))data.attempt_id=props.attempt_id;
   for(const k of ['step','branch','plan','tier','value','currency','outcome','method','screen'])if(['string','number','boolean'].includes(typeof props[k]))data[k]=typeof props[k]==='string'?props[k].slice(0,100):props[k];
   // Dedicated intent amount belongs to the final test event only; never sum stage values.

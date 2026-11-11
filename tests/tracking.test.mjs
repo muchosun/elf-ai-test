@@ -1,20 +1,21 @@
 import assert from 'node:assert/strict';
 import vm from 'node:vm';
 import {readFileSync} from 'node:fs';
+const configSource=readFileSync(new URL('../tracking-config.js',import.meta.url),'utf8');
 const source=readFileSync(new URL('../tracking.js',import.meta.url),'utf8');
 const values=new Map(),events=[];
 function boot(href,funnel='',ready=true){
  const handlers={};const window={location:{href,origin:new URL(href).origin},document:{documentElement:{dataset:{funnel}}},sessionStorage:{getItem:k=>values.get(k),setItem:(k,v)=>values.set(k,v)},history:{replaceState(a,b,u){window.location.href=u}},addEventListener:(n,f)=>handlers[n]=f,setTimeout:f=>f(),gtag:ready?((...a)=>{events.push(a);a[2]?.event_callback?.()}):undefined};
- vm.runInNewContext(source,{window,URL});return {window,handlers};
+ vm.runInNewContext(configSource,{window});vm.runInNewContext(source,{window,URL});return {window,handlers};
 }
 let a=boot('https://elf.pink/f/campaign/creators-101?utm_source=meta&clickid=test-click&email=private%40example.com','creators-101');
 assert.equal(a.window.ElfTracking.attribution().clickid,'test-click');assert.ok(!a.window.ElfTracking.pageLocation().includes('email='));
 let b=boot('https://elf.pink/creators.html#signup','creators-101');assert.ok(b.window.location.href.includes('utm_source=meta'));assert.ok(b.window.location.href.includes('clickid=test-click'));
 b.window.ElfTracking.event('sign_up',{method:'google',email:'private@example.com',description:'private'});assert.equal(events.at(-1)[1],'sign_up');assert.ok(!JSON.stringify(events.at(-1)).includes('private'));
 let c=boot('https://elf.pink/index.html?mavs_return=success&merchant_payment_id=private-order#paywall');assert.ok(!c.window.ElfTracking.pageLocation().includes('private-order'));assert.equal(c.window.ElfTracking.attribution().funnel,'creators-101');
-let d=boot('https://elf.pink/?utm_source=google');assert.equal(d.window.ElfTracking.attribution().clickid,undefined);assert.equal(d.window.ElfTracking.trackwillReady(),false);
+let d=boot('https://elf.pink/?utm_source=google');assert.equal(d.window.ElfTracking.attribution().clickid,undefined);assert.equal(d.window.ElfTracking.trackwillReady(),true);
 d.handlers['elf:analytics']({detail:{name:'registration_complete',properties:{email:'private'}}});assert.equal(events.at(-1)[1],'sign_up');assert.equal(events.at(-1)[2].method,'email');
-console.log('PASS: attribution survives OAuth/payment return, new click replaces attribution, analytics excludes PII/payment IDs, TrackWill remains unconfigured');
+console.log('PASS: attribution survives OAuth/payment return, new click replaces attribution, analytics excludes PII/payment IDs, provided TrackWill link is configured');
 
 const pending=JSON.parse(values.get('elf.ga.pending.v1')||'[]');assert.equal(pending.length,0);
 
@@ -40,3 +41,9 @@ console.log('PASS: intent amount is finite and final-stage-only; paywall has an 
 
 const handoff=boot('https://elf.pink/of-creators.html?utm_source=qa');const beforeHandoff=events.length;handoff.window.ElfTracking.event('preland_cta',{tier:'starter'},{deferUntilNextPage:true});assert.equal(events.length,beforeHandoff);assert.equal(JSON.parse(values.get('elf.ga.pending.v1')).at(-1).name,'preland_cta');boot('https://elf.pink/index.html#signup');assert.equal(events.at(-1)[1],'preland_cta');assert.ok(events.at(-1)[2].page_location.includes('/of-creators.html'));assert.equal(JSON.parse(values.get('elf.ga.pending.v1')).length,0);
 console.log('PASS: CTA is persisted before navigation and sent once on the next page with its original source location');
+
+const tw=boot('https://elf.pink/f/campaign/creators-101?source_id=facebook&sub4=1003891172735447&sub5=dbq75h9371ks9ev7vt20&fbclid=','creators-101');assert.equal(tw.window.ElfTracking.attribution().sub5,'dbq75h9371ks9ev7vt20');assert.equal(tw.window.ElfTracking.attribution().utm_source,undefined);
+const twApp=boot('https://elf.pink/index.html?funnel=creators-101#signup');twApp.window.ElfTracking.event('sign_up',{method:'email',trackwill_sub5:'spoof'});assert.equal(events.at(-1)[2].trackwill_sub5,'dbq75h9371ks9ev7vt20');assert.equal(events.at(-1)[2].source_id,'facebook');assert.ok(twApp.window.location.href.includes('sub5=dbq75h9371ks9ev7vt20'));
+const twResult=boot('https://elf.pink/test-checkout-result.html?plan=annual');twResult.window.ElfTracking.event('qa_payment_simulated',{value:72,order_amount:72,currency:'USD'});assert.equal(events.at(-1)[2].trackwill_sub5,'dbq75h9371ks9ev7vt20');assert.equal(events.at(-1)[2].order_amount,72);
+boot('https://elf.pink/?sub5=anotherclick123');assert.equal(JSON.parse(values.get('elf.attribution.v1')).sub4,undefined);
+console.log('PASS: TrackWill sub5/source survive registration and checkout, new tracker IDs reset old attribution, event properties cannot spoof the stored tracker key');

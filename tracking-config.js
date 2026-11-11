@@ -1,3 +1,3 @@
-// Public launch configuration. The buyer will provide the TrackWill URL.
+// Public launch configuration. TrackWill URL supplied by the buyer.
 // Use that URL in ads with destination https://elf.pink/f/campaign/creators-101.
-window.ELF_TRACKING_CONFIG=Object.freeze({ga4Id:'G-E1QPWQ2FDF',trackwillUrl:null,clickIdParams:['clickid','click_id','subid','sub_id','twclid']});
+window.ELF_TRACKING_CONFIG=Object.freeze({ga4Id:'G-E1QPWQ2FDF',trackwillUrl:"https://r.trwl1.com/c1/d20b8da2-26a6-461f-abc7-401bde6e5b34?cv1=%7B%7Bcampaign.name%7D%7D&cv2=%7B%7Badset.name%7D%7D&cv3=%7B%7Bad.name%7D%7D&cv4=%7B%7Bplacement%7D%7D&cv5=%7B%7Bsite_source_name%7D%7D&cv6=%7B%7Bcampaign.id%7D%7D&cv7=%7B%7Badset.id%7D%7D&cv8=%7B%7Bad.id%7D%7D&cv9=1003891172735447&cv10=%7Blanding%7D",clickIdParams:['clickid','click_id','subid','sub_id','twclid','sub5']});
