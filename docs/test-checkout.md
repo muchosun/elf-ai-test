@@ -49,3 +49,11 @@ Helpers are inlined into the existing hashed CSP script at build time; no new ru
 ## Compact test disclosure
 
 The large colored banner was replaced by one readable 13px note directly before the fields: “Test checkout — no charge. Do not enter real card details.” It is visible before typing, in normal document flow, with no delayed reveal or fine-print hiding. Duplicate test wording was removed from the plan CTA; privacy/terms and the explicit result message remain. No validation, data isolation or analytics behavior changed.
+
+## Expanded Order Summary
+
+Display data is projected from the existing offers/checkoutPlans catalog in `test-checkout/order-summary.js` and embedded in the sandbox at build time. It includes plan name, credits per month, monthly equivalent, billing period, full-period total and USD. Annual plans show the monthly-plan rate as a comparison, cost of12months at monthly pricing, exact dollar savings and the catalog's rounded percentage discount. Monthly plans hide annual savings and crossed-out pricing. No fees, subscription functionality or catalog prices were added.
+
+Example: Starter Annual is80credits/month, $6monthly equivalent, $72for12months, compared with $9monthly/$108for12months; saving$36, rounded33%. The wording distinguishes the monthly equivalent from the yearly total. Initial HTML uses neutral loading placeholders instead of flashing a wrong plan price. The payment logic and GA event payloads are unchanged.
+
+Unit tests verify all14 catalog variants and arithmetic invariants. Browser QA checks Starter monthly/annual, Creator monthly/annual, highest Pro annual, mobile390/desktop1440, discount visibility, no horizontal overflow and a full simulated-payment completion. Screenshots: `output/playwright/elf-order-summary/`.
